@@ -32,3 +32,8 @@ install stow for creating and managing symbolic link with following command.
 ```
 sudo apt install stow
 ```
+
+
+## Installation
+
+Follow this step by step guide to install all the files onto your computer. 
