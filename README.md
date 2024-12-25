@@ -1,1 +1,1 @@
-#welcome to the dotfiles git repo 
+# welcome to the dotfiles git repo 
