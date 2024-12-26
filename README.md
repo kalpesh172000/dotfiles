@@ -63,3 +63,5 @@ when everything is fine we would create symlinks for all the dotfiles with follo
 cd ~/dotfiles/
 stow . 
 ```
+YouTube link to the followed tutorial.
+https://youtu.be/y6XCebnB9gs?si=H3_4qH3BfuGxqoKI
