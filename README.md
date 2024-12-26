@@ -37,3 +37,29 @@ sudo apt install stow
 ## Installation
 
 Follow this step by step guide to install all the files onto your computer. 
+
+### Clone Dotfiles 
+
+clone ths repository into your home folder and give it name dotfiles. 
+Following commands will take you to home directory and clone this repo in dotfiles directory.
+```
+cd ~
+git clone git@github.com:kalpesh172000/dotfiles.git dotfiles
+```
+### Take Causion 
+Before stowing all the files we would try to find conflicts. It is neccessary as the os and applications create default configuration files and we would try to avoid breaking down any application. 
+We can check which files are having conflicts by running 
+```
+stow --no nvim
+```
+We can also try to create backup by renaming the files and adding .bak at the end like 
+```
+mv .zshrc .zshrc.bak
+```
+
+### Stow all 
+when everything is fine we would create symlinks for all the dotfiles with following command. 
+```
+cd ~/dotfiles/
+stow . 
+```
