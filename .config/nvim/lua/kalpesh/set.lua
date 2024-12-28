@@ -35,3 +35,8 @@ vim.g.mapleader = " "
 --vim.opt.list = false
 vim.opt.filetype = "on"
 
+-- Enable rainbow brackets plugin
+vim.g.rainbow_active = 1
+
+-- Optionally ensure 'syntax on' is enabled
+vim.cmd("syntax on")

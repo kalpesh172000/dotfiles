@@ -11,6 +11,7 @@ return {
         "L3MON4D3/LuaSnip",
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
+        "windwp/nvim-autopairs",
     },
 
     config = function()
@@ -51,7 +52,6 @@ return {
                     })
                     vim.g.zig_fmt_parse_errors = 0
                     vim.g.zig_fmt_autosave = 0
-
                 end,
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
@@ -103,5 +103,11 @@ return {
                 prefix = "",
             },
         })
+        local autopairs = require("nvim-autopairs")
+        autopairs.setup({})
+
+        -- Integration with nvim-cmp for better pairing behavior
+        local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+        cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
     end
 }
