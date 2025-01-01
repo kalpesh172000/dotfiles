@@ -30,6 +30,8 @@ return {
                 "lua_ls",
                 "clangd",
                 "rust_analyzer",
+                "emmet_ls", -- For HTML tag auto-completion
+                "cssls",    -- For CSS property suggestions
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -67,6 +69,32 @@ return {
                         }
                     }
                 end,
+
+                -- congiguration for the emmet_ls which was added to mason ensure_installed
+                ["emmet_ls"] = function()
+                    require("lspconfig").emmet_ls.setup({
+                        capabilities = capabilities,
+                        filetypes = { "html", "css", "javascriptreact", "typescriptreact", "vue" },
+                    })
+                end,
+
+                -- congiguration for the cssls which was added to mason ensure_installed
+                ["cssls"] = function()
+                    require("lspconfig").cssls.setup({
+                        capabilities = capabilities,
+                        settings = {
+                            css = {
+                                validate = true,
+                            },
+                            less = {
+                                validate = true,
+                            },
+                            scss = {
+                                validate = true,
+                            },
+                        },
+                    })
+                end,
             }
         })
 
@@ -86,9 +114,9 @@ return {
             }),
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
-                { name = 'luasnip' }, -- For luasnip users.
-            }, {
-                { name = 'buffer' },
+                { name = 'luasnip' },
+                { name = 'buffer' }, -- For text within the same file
+                { name = 'path' }, -- For file paths
             })
         })
 
