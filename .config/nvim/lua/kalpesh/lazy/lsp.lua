@@ -25,13 +25,19 @@ return {
 
         require("fidget").setup({})
         require("mason").setup()
+
+
+
+
+        ---------------------- MASON-LSPCONFIG START ----------------------
         require("mason-lspconfig").setup({
             ensure_installed = {
                 "lua_ls",
                 "clangd",
                 "rust_analyzer",
-                "emmet_ls", -- For HTML tag auto-completion
-                "cssls",    -- For CSS property suggestions
+                -- :MasonInstall emmet-language-server
+                --"emmet-language-server", -- For HTML tag auto-completion
+                "cssls",                 -- For CSS property suggestions
             },
             handlers = {
                 function(server_name) -- default handler (optional)
@@ -55,6 +61,7 @@ return {
                     vim.g.zig_fmt_parse_errors = 0
                     vim.g.zig_fmt_autosave = 0
                 end,
+
                 ["lua_ls"] = function()
                     local lspconfig = require("lspconfig")
                     lspconfig.lua_ls.setup {
@@ -70,11 +77,32 @@ return {
                     }
                 end,
 
-                -- congiguration for the emmet_ls which was added to mason ensure_installed
-                ["emmet_ls"] = function()
-                    require("lspconfig").emmet_ls.setup({
-                        capabilities = capabilities,
-                        filetypes = { "html", "css", "javascriptreact", "typescriptreact", "vue" },
+
+                ["emmet_language_server"] = function()
+                    require("lspconfig").emmet_language_server.setup({
+                        filetypes = { "css", "eruby", "html", "javascript", "javascriptreact", "less", "sass", "scss", "pug", "typescriptreact" },
+                        -- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
+                        -- **Note:** only the options listed in the table are supported.
+                        init_options = {
+                            ---@type table<string, string>
+                            includeLanguages = {},
+                            --- @type string[]
+                            excludeLanguages = {},
+                            --- @type string[]
+                            extensionsPath = {},
+                            --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
+                            preferences = {},
+                            --- @type boolean Defaults to `true`
+                            showAbbreviationSuggestions = true,
+                            --- @type "always" | "never" Defaults to `"always"`
+                            showExpandedAbbreviation = "always",
+                            --- @type boolean Defaults to `false`
+                            showSuggestionsAsSnippets = false,
+                            --- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
+                            syntaxProfiles = {},
+                            --- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
+                            variables = {},
+                        },
                     })
                 end,
 
@@ -97,13 +125,18 @@ return {
                 end,
             }
         })
+        ---------------------- MASON-LSPCONFIG END ----------------------
 
+
+
+
+        ---------------------- CMP SETUP START ----------------------
         local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
         cmp.setup({
             snippet = {
                 expand = function(args)
-                    require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+                    require('luasnip').lsp_expand(args.body)
                 end,
             },
             mapping = cmp.mapping.preset.insert({
@@ -115,10 +148,14 @@ return {
             sources = cmp.config.sources({
                 { name = 'nvim_lsp' },
                 { name = 'luasnip' },
-                { name = 'buffer' }, -- For text within the same file
-                { name = 'path' }, -- For file paths
-            })
+                { name = 'buffer' },
+                { name = 'path' },
+            }),
         })
+        ---------------------- CMP SETUP START ----------------------
+
+
+
 
         vim.diagnostic.config({
             -- update_in_insert = true,
