@@ -3,3 +3,8 @@
 	email = kalpesh200071@gmail.com
 [pager]
 	branch = false
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f

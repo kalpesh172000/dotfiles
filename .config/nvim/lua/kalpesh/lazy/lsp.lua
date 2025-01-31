@@ -24,7 +24,18 @@ return {
             cmp_lsp.default_capabilities())
 
         require("fidget").setup({})
-        require("mason").setup()
+        require("mason").setup({
+            PATH = "prepend", -- Ensure Mason binaries are found first
+            install_root_dir = vim.fn.stdpath("data") .. "/mason",
+            log_level = vim.log.levels.INFO,
+            pip = {
+                upgrade_pip = true,
+                install_args = {}, -- Additional arguments to `pip install`
+            },
+            python = {
+                executable = "python3", -- Ensure the correct Python interpreter is used
+            },
+        })
 
 
 
@@ -37,7 +48,7 @@ return {
                 "rust_analyzer",
                 -- :MasonInstall emmet-language-server
                 --"emmet-language-server", -- For HTML tag auto-completion
-                "cssls",                 -- For CSS property suggestions
+                "cssls", -- For CSS property suggestions
             },
             handlers = {
                 function(server_name) -- default handler (optional)

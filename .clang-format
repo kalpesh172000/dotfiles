@@ -1,0 +1,4 @@
+BasedOnStyle: LLVM  # Or other base style like Google, Mozilla, WebKit
+IndentWidth: 4      # Number of spaces per indentation level
+TabWidth: 4         # Number of spaces a tab character represents
+UseTab: Never       # Options: Never, ForIndentation, Always
