@@ -63,5 +63,21 @@ when everything is fine we would create symlinks for all the dotfiles with follo
 cd ~/dotfiles/
 stow . 
 ```
+
+
+## Cloning the windows terminal settings 
+Windows termina settings are stored in windows c drive so we can't just use gnu stow for that. So to we have to create the symlink in windows 
+1. first close windows terminal completly so that it doesn't automatically creates new settings.json file.
+2. (optional) if you haven't copied the settings.json files and are doing new setup then copy the file from C:\Users\kalpe\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json to the dotfiles folder.
+3. delete the original settings.json file.
+4. use following command to create the symlink in windows
+```
+New-Item -ItemType SymbolicLink -Path "C:\Users\kalpe\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json" -Target "\\wsl.localhost\Ubuntu-24.04\home\kalpesh\dotfiles\settings.json"
+```
+5. to remove the symlink use follwing command 
+```
+Remove-Item "C:\Users\kalpe\AppData\Local\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json"
+```
+
 YouTube link to the followed tutorial.
 https://youtu.be/y6XCebnB9gs?si=H3_4qH3BfuGxqoKI
