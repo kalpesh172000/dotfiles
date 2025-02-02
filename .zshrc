@@ -127,3 +127,7 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 export PATH="/home/kalpesh/.avm/bin:$PATH"
 export PATH="$PATH:/opt/nvim-linux64/bin"
 alias vi="nvim"
+
+setopt HIST_SAVE_NO_DUPS
+setopt HIST_IGNORE_SPACE
+setopt HIST_REDUCE_BLANKS
