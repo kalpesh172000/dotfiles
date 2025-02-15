@@ -134,8 +134,43 @@ return {
                         },
                     })
                 end,
+
+                ["rust_analyzer"] = function()
+                    require("lspconfig").rust_analyzer.setup({
+                        capabilities = capabilities,
+                        settings = {
+                            ["rust-analyzer"] = {
+                                diagnostics = { enable = true },      -- Keep rust-analyzer diagnostics
+                                checkOnSave = { command = "clippy" }, -- Prevent rustc from running `check`
+                                cargo = { buildScripts = { enable = true } },
+                                procMacro = { enable = true },
+                            },
+                        },
+                        flags = { debounce_text_changes = 500 },
+                    })
+
+                    local notify_builtin = vim.notify
+                    vim.notify = function(msg, log_level, opts)
+                        if (msg == "1rust_analyzer: -32802: server cancelled the request") then
+                            return
+                        else
+                            notify_builtin(msg, log_level, opts)
+                        end
+                        --[[ require("notify")(msg, log_level, opts) -- Use notify for everything else ]]
+                    end
+                end
+
             }
         })
+
+
+        --[[ vim.lsp.handlers["window/showMessage"] = function(_, result, ctx) ]]
+        --[[     if result.type <= 3 then -- Prevents errors & warnings from appearing in command line ]]
+        --[[         return ]]
+        --[[     end ]]
+        --[[     vim.notify(result.message, "info", { title = "LSP", timeout = 3000 }) ]]
+        --[[ end ]]
+
         ---------------------- MASON-LSPCONFIG END ----------------------
 
 
@@ -170,8 +205,13 @@ return {
 
         vim.diagnostic.config({
             -- update_in_insert = true,
+            virtual_text = {
+                wrap = true, -- Enable wrapping in virtual text
+            },
             float = {
-                focusable = false,
+                wrap = true,    -- Enable wrapping in floating windows
+                max_width = 80, -- Adjust width to fit screen
+                focusable = true,
                 style = "minimal",
                 border = "rounded",
                 source = "always",
@@ -179,6 +219,14 @@ return {
                 prefix = "",
             },
         })
+        -- for warning and error wrap work in floating window
+        vim.api.nvim_create_autocmd("CursorHold", {
+            callback = function()
+                vim.diagnostic.open_float(nil, { focusable = false, wrap = true, border = "rounded", max_width = 80 })
+            end,
+        })
+
+
         local autopairs = require("nvim-autopairs")
         autopairs.setup({})
 
