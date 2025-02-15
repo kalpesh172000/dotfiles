@@ -151,7 +151,7 @@ return {
 
                     local notify_builtin = vim.notify
                     vim.notify = function(msg, log_level, opts)
-                        if (msg == "1rust_analyzer: -32802: server cancelled the request") then
+                        if (msg == "rust_analyzer: -32802: server cancelled the request") then
                             return
                         else
                             notify_builtin(msg, log_level, opts)
