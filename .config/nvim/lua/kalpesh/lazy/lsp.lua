@@ -140,7 +140,7 @@ return {
                         capabilities = capabilities,
                         settings = {
                             ["rust-analyzer"] = {
-                                diagnostics = { enable = true },      -- Keep rust-analyzer diagnostics
+                                diagnostics = { enable = false },      -- Keep rust-analyzer diagnostics
                                 checkOnSave = { command = "clippy" }, -- Prevent rustc from running `check`
                                 cargo = { buildScripts = { enable = true } },
                                 procMacro = { enable = true },
