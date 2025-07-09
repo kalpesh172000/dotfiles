@@ -8,7 +8,7 @@ return {
             formatters_by_ft = {
                 lua = { "stylua" },
                 javascript = { "prettierd", "prettier" },
-                cpp = { "clang-format" },
+                cpp = {  "clang-format" },
                 typescript = { "prettierd", "prettier" },
                 javascriptreact = { "prettierd", "prettier" },
                 typescriptreact = { "prettierd", "prettier" },
@@ -21,6 +21,7 @@ return {
                 toml = { "taplo" },
                 css = { "prettierd", "prettier" },
                 scss = { "prettierd", "prettier" },
+                yarn = { "yaml-language-server" },
             },
             stop_after_first = true, -- Apply stop_after_first globally
         })

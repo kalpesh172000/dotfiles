@@ -11,6 +11,9 @@ vim.keymap.set("n", "<C-u>", "<C-u>zz")
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
+-- Visual mode: Tab to indent, Shift-Tab to outdent
+vim.keymap.set("v", "<Tab>", ">gv")
+vim.keymap.set("v", "<S-Tab>", "<gv")
 
 -- greatest remap ever
 -- paste operaton presert what was pasted so it can be pasted again 

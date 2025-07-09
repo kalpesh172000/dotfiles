@@ -12,6 +12,7 @@ return {
         "saadparwaiz1/cmp_luasnip",
         "j-hui/fidget.nvim",
         "windwp/nvim-autopairs",
+        "luckasRanarison/tailwind-tools.nvim",
     },
 
     config = function()
@@ -140,7 +141,7 @@ return {
                         capabilities = capabilities,
                         settings = {
                             ["rust-analyzer"] = {
-                                diagnostics = { enable = false },      -- Keep rust-analyzer diagnostics
+                                diagnostics = { enable = false },     -- Keep rust-analyzer diagnostics
                                 checkOnSave = { command = "clippy" }, -- Prevent rustc from running `check`
                                 cargo = { buildScripts = { enable = true } },
                                 procMacro = { enable = true },
@@ -158,7 +159,22 @@ return {
                         end
                         --[[ require("notify")(msg, log_level, opts) -- Use notify for everything else ]]
                     end
-                end
+                end,
+
+                --[[ ["typescript-language-server"] = function() ]]
+                --[[     require("lspconfig").ts_ls.setup({ ]]
+                --[[         capabilities = capabilities, ]]
+                --[[         filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }, -- Ensure TSX support ]]
+                --[[         settings = { ]]
+                --[[             typescript = { ]]
+                --[[                 inlayHints = { includeInlayParameterNameHints = "all" } ]]
+                --[[             }, ]]
+                --[[             javascript = { ]]
+                --[[                 inlayHints = { includeInlayParameterNameHints = "all" } ]]
+                --[[             } ]]
+                --[[         } ]]
+                --[[     }) ]]
+                --[[ end ]]
 
             }
         })
@@ -173,6 +189,40 @@ return {
 
         ---------------------- MASON-LSPCONFIG END ----------------------
 
+        ----------------------  TAILWIND-TOOLS START ----------------------
+
+        require("tailwind-tools").setup(
+            {
+                -- Preview configuration for Tailwind classes (optional)
+                preview = {
+                    enabled = true,      -- Enable preview feature for Tailwind classes
+                    open_cmd = "vsplit", -- How to open the preview window (e.g., vsplit, split, tabnew)
+                    auto_open = true,    -- Automatically open preview on cursor hold (set to true if desired)
+                    -- this is the option that makes base css visible
+                    --[[ width = 80, -- (Optional) Preview window width ]]
+                    --[[ height = 15, -- (Optional) Preview window height ]]
+                },
+
+                -- Filetypes where tailwind-tools should be active
+                filetypes = {
+                    "html",
+                    "css",
+                    "javascript",
+                    "javascriptreact",
+                    "typescript",
+                    "typescriptreact",
+                    "vue"
+                },
+
+                -- (Optional) Specify the path to your tailwind config file if it isn't at the default location.
+                -- config_path = "tailwind.config.js",
+
+                -- (Optional) Additional settings can be added here if needed.
+            }
+        )
+        vim.api.nvim_set_keymap("n", "<leader>tw", "<cmd>TailwindToolsPreview<CR>",
+            { noremap = true, silent = true, desc = "Open Tailwind Preview" })
+        ----------------------  TAILWIND-TOOLS END ----------------------
 
 
 
