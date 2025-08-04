@@ -131,3 +131,5 @@ alias vi="nvim"
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
+
+export PATH=$PATH:/usr/local/go/bin

@@ -13,8 +13,8 @@ return {
 		"j-hui/fidget.nvim",
 		"windwp/nvim-autopairs",
 		"luckasRanarison/tailwind-tools.nvim",
+		"b0o/schemastore.nvim",
 	},
-
 	config = function()
 		local cmp = require("cmp")
 		local cmp_lsp = require("cmp_nvim_lsp")
@@ -39,204 +39,23 @@ return {
 			},
 		})
 
+		---------------------- LSP CONFIGURATION START--------------------
+		local mason_registry = require("mason-registry")
 
-        ---------------------- LSP CONFIGURATION START--------------------
+		local servers = { "lua-language-server" }
 
-		vim.lsp.config.lua_ls = {
-			cmd = { vim.fn.exepath("lua-language-server") },
-			root_markers = {
-				".luarc.json",
-				".luarc.jsonc",
-				".luacheckrc",
-				".stylua.toml",
-				"stylua.toml",
-				"selene.toml",
-				"selene.yml",
-			},
-			settings = {
-				Lua = {
-					diagnostics = {
-						globals = {"vim"},
-					},
-					workspace = {
-						library = vim.api.nvim_get_runtime_file("", true),
-						checkThirdParty = false,
-					},
-					telemetry = { enable = false },
-				},
-			},
-		}
-        ---------------------- LSP CONFIGURATION START--------------------
+		for _, server in ipairs(servers) do
+			if not mason_registry.is_installed(server) then
+				mason_registry.get_package(server):install()
+			end
+		end
+
+		local server_setup = require("kalpesh.servers")
+        server_setup()
+		---------------------- LSP CONFIGURATION END--------------------
 
 		---------------------- MASON-LSPCONFIG START ----------------------
-		require("mason-lspconfig").setup({
-			ensure_installed = {
-				"lua_ls",
-				"clangd",
-				"rust_analyzer",
-				-- :MasonInstall emmet-language-server
-				--"emmet-language-server", -- For HTML tag auto-completion
-				"cssls", -- For CSS property suggestions
-			},
-			automatic_enable = true,
-			automatic_installation = true,
-			handlers = {
-				function(server_name) -- default handler (optional)
-					require("lspconfig")[server_name].setup({
-						capabilities = capabilities,
-					})
-				end,
-
-				zls = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.zls.setup({
-						root_dir = lspconfig.util.root_pattern(".git", "build.zig", "zls.json"),
-						settings = {
-							zls = {
-								enable_inlay_hints = true,
-								enable_snippets = true,
-								warn_style = true,
-							},
-						},
-					})
-					vim.g.zig_fmt_parse_errors = 0
-					vim.g.zig_fmt_autosave = 0
-				end,
-
-				["lua_ls"] = function()
-					local lspconfig = require("lspconfig")
-					lspconfig.lua_ls.setup({
-						on_attach = on_attach,
-						capabilities = capabilities,
-						settings = {
-							Lua = {
-								runtime = {
-									-- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-									version = "LuaJIT",
-									path = vim.split(package.path, ";"),
-								},
-								diagnostics = {
-									-- Get the language server to recognize the `vim` global
-									globals = { "vim" },
-								},
-								workspace = {
-									-- Make the server aware of Neovim runtime files and plugins
-									library = { vim.env.VIMRUNTIME },
-									checkThirdParty = false,
-								},
-								telemetry = {
-									enable = false,
-								},
-							},
-						},
-					})
-				end,
-
-				["emmet_language_server"] = function()
-					require("lspconfig").emmet_language_server.setup({
-						filetypes = {
-							"css",
-							"eruby",
-							"html",
-							"javascript",
-							"javascriptreact",
-							"less",
-							"sass",
-							"scss",
-							"pug",
-							"typescriptreact",
-						},
-						-- Read more about this options in the [vscode docs](https://code.visualstudio.com/docs/editor/emmet#_emmet-configuration).
-						-- **Note:** only the options listed in the table are supported.
-						init_options = {
-							---@type table<string, string>
-							includeLanguages = {},
-							--- @type string[]
-							excludeLanguages = {},
-							--- @type string[]
-							extensionsPath = {},
-							--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/preferences/)
-							preferences = {},
-							--- @type boolean Defaults to `true`
-							showAbbreviationSuggestions = true,
-							--- @type "always" | "never" Defaults to `"always"`
-							showExpandedAbbreviation = "always",
-							--- @type boolean Defaults to `false`
-							showSuggestionsAsSnippets = false,
-							--- @type table<string, any> [Emmet Docs](https://docs.emmet.io/customization/syntax-profiles/)
-							syntaxProfiles = {},
-							--- @type table<string, string> [Emmet Docs](https://docs.emmet.io/customization/snippets/#variables)
-							variables = {},
-						},
-					})
-				end,
-
-				-- congiguration for the cssls which was added to mason ensure_installed
-				["cssls"] = function()
-					require("lspconfig").cssls.setup({
-						capabilities = capabilities,
-						settings = {
-							css = {
-								validate = true,
-							},
-							less = {
-								validate = true,
-							},
-							scss = {
-								validate = true,
-							},
-						},
-					})
-				end,
-
-				["rust_analyzer"] = function()
-					require("lspconfig").rust_analyzer.setup({
-						capabilities = capabilities,
-						settings = {
-							["rust-analyzer"] = {
-								diagnostics = { enable = false }, -- Keep rust-analyzer diagnostics
-								checkOnSave = { command = "clippy" }, -- Prevent rustc from running `check`
-								cargo = { buildScripts = { enable = true } },
-								procMacro = { enable = true },
-							},
-						},
-						flags = { debounce_text_changes = 500 },
-					})
-
-					local notify_builtin = vim.notify
-					vim.notify = function(msg, log_level, opts)
-						if msg == "rust_analyzer: -32802: server cancelled the request" then
-							return
-						else
-							notify_builtin(msg, log_level, opts)
-						end
-						--[[ require("notify")(msg, log_level, opts) -- Use notify for everything else ]]
-					end
-				end,
-
-				--[[ ["typescript-language-server"] = function() ]]
-				--[[     require("lspconfig").ts_ls.setup({ ]]
-				--[[         capabilities = capabilities, ]]
-				--[[         filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact" }, -- Ensure TSX support ]]
-				--[[         settings = { ]]
-				--[[             typescript = { ]]
-				--[[                 inlayHints = { includeInlayParameterNameHints = "all" } ]]
-				--[[             }, ]]
-				--[[             javascript = { ]]
-				--[[                 inlayHints = { includeInlayParameterNameHints = "all" } ]]
-				--[[             } ]]
-				--[[         } ]]
-				--[[     }) ]]
-				--[[ end ]]
-			},
-		})
-
-		--[[ vim.lsp.handlers["window/showMessage"] = function(_, result, ctx) ]]
-		--[[     if result.type <= 3 then -- Prevents errors & warnings from appearing in command line ]]
-		--[[         return ]]
-		--[[     end ]]
-		--[[     vim.notify(result.message, "info", { title = "LSP", timeout = 3000 }) ]]
-		--[[ end ]]
+		require("mason-lspconfig").setup({})
 
 		---------------------- MASON-LSPCONFIG END ----------------------
 

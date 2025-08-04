@@ -15,7 +15,7 @@ return {
 				json = { "prettierd", "prettier" },
 				java = { "google-java-format" },
 				markdown = { "prettierd", "prettier" },
-                rust = { "rustfmt"},
+				rust = { "rustfmt" },
 				erb = { "htmlbeautifier" },
 				html = { "htmlbeautifier" },
 				bash = { "beautysh" },
@@ -23,6 +23,7 @@ return {
 				css = { "prettierd", "prettier" },
 				scss = { "prettierd", "prettier" },
 				yarn = { "yaml-language-server" },
+				go = { "prettier" },
 			},
 			stop_after_first = true, -- Apply stop_after_first globally
 		})
