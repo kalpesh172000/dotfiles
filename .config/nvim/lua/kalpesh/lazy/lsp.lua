@@ -51,7 +51,7 @@ return {
 		end
 
 		local server_setup = require("kalpesh.servers")
-        server_setup()
+		server_setup()
 		---------------------- LSP CONFIGURATION END--------------------
 
 		---------------------- MASON-LSPCONFIG START ----------------------
@@ -119,6 +119,24 @@ return {
 			}),
 		})
 		---------------------- CMP SETUP START ----------------------
+		-- Set transparent background for diagnostic floating windows
+		vim.api.nvim_create_autocmd("ColorScheme", {
+			pattern = "*",
+			callback = function()
+				-- Make diagnostic float background transparent
+				vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+				vim.api.nvim_set_hl(0, "FloatBorder", { bg = "none" })
+
+				-- Optional: Make the diagnostic text backgrounds transparent too
+				vim.api.nvim_set_hl(0, "DiagnosticFloatingError", { bg = "none" })
+				vim.api.nvim_set_hl(0, "DiagnosticFloatingWarn", { bg = "none" })
+				vim.api.nvim_set_hl(0, "DiagnosticFloatingInfo", { bg = "none" })
+				vim.api.nvim_set_hl(0, "DiagnosticFloatingHint", { bg = "none" })
+			end,
+		})
+
+		-- Trigger the highlight changes immediately if colorscheme is already loaded
+		vim.cmd("doautocmd ColorScheme")
 
 		vim.diagnostic.config({
 			-- update_in_insert = true,
@@ -131,21 +149,72 @@ return {
 				focusable = true,
 				style = "minimal",
 				border = "rounded",
-				source = "always",
+				source = true,
 				header = "",
 				prefix = "",
 			},
 		})
 		-- for warning and error wrap work in floating window
+		-- Better diagnostic float handling
 		vim.api.nvim_create_autocmd("CursorHold", {
 			callback = function()
-				vim.diagnostic.open_float(nil, { focusable = false, wrap = true, border = "rounded", max_width = 80 })
+				-- Only show diagnostics if there are any at the current position
+				local opts = {
+					focusable = false,
+					close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+					border = "rounded",
+					source = true,
+					prefix = " ",
+					scope = "cursor", -- Only show diagnostics for current cursor position
+				}
+
+				-- Check if there are diagnostics at current position before opening
+				local line = vim.api.nvim_win_get_cursor(0)[1] - 1
+				local diagnostics = vim.diagnostic.get(0, { lnum = line })
+
+				if #diagnostics > 0 then
+					vim.diagnostic.open_float(nil, opts)
+				end
 			end,
 		})
 
+		-- Close diagnostic floats when switching buffers or moving cursor
+		vim.api.nvim_create_autocmd({ "BufLeave", "CursorMoved", "CursorMovedI" }, {
+			callback = function()
+				-- Close any open diagnostic floats
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					local config = vim.api.nvim_win_get_config(win)
+					if config.relative ~= "" then -- It's a floating window
+						local buf = vim.api.nvim_win_get_buf(win)
+						local buf_name = vim.api.nvim_buf_get_name(buf)
+						-- Close if it's likely a diagnostic float (empty name, small buffer)
+						if buf_name == "" and vim.api.nvim_buf_line_count(buf) < 20 then
+							pcall(vim.api.nvim_win_close, win, true)
+						end
+					end
+				end
+			end,
+		})
+
+		-- Alternative: Use a more targeted approach with keymaps instead of autocmd
+		-- Comment out the autocmd above and use this instead if you prefer manual control:
+		--[[
+vim.keymap.set("n", "<leader>d", function()
+	vim.diagnostic.open_float(nil, {
+		focusable = false,
+		close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
+		border = "rounded",
+		source = true,
+		prefix = " ",
+		scope = "cursor",
+		wrap = true,
+		max_width = 80,
+	})
+end, { desc = "Show line diagnostics" })
+]]
+
 		local autopairs = require("nvim-autopairs")
 		autopairs.setup({})
-
 		-- Integration with nvim-cmp for better pairing behavior
 		local cmp_autopairs = require("nvim-autopairs.completion.cmp")
 		cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())

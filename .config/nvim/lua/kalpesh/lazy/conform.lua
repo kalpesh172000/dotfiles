@@ -23,7 +23,7 @@ return {
 				css = { "prettierd", "prettier" },
 				scss = { "prettierd", "prettier" },
 				yarn = { "yaml-language-server" },
-				go = { "prettier" },
+				go = { "gofumpt" },
 			},
 			stop_after_first = true, -- Apply stop_after_first globally
 		})
