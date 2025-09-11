@@ -49,7 +49,6 @@ return {
 				mason_registry.get_package(server):install()
 			end
 		end
-
 		local server_setup = require("kalpesh.servers")
 		server_setup()
 		---------------------- LSP CONFIGURATION END--------------------
@@ -68,8 +67,8 @@ return {
 				open_cmd = "vsplit", -- How to open the preview window (e.g., vsplit, split, tabnew)
 				auto_open = true, -- Automatically open preview on cursor hold (set to true if desired)
 				-- this is the option that makes base css visible
-				--[[ width = 80, -- (Optional) Preview window width ]]
-				--[[ height = 15, -- (Optional) Preview window height ]]
+				-- width = 80, -- (Optional) Preview window width
+				-- height = 15, -- (Optional) Preview window height
 			},
 
 			-- Filetypes where tailwind-tools should be active
@@ -140,9 +139,11 @@ return {
 
 		vim.diagnostic.config({
 			-- update_in_insert = true,
-			virtual_text = {
+            -- this is the text that is shown in red line 
+            virtual_text = false,
+			--[[virtual_text = {
 				wrap = true, -- Enable wrapping in virtual text
-			},
+			},]]
 			float = {
 				wrap = true, -- Enable wrapping in floating windows
 				max_width = 80, -- Adjust width to fit screen
@@ -156,6 +157,7 @@ return {
 		})
 		-- for warning and error wrap work in floating window
 		-- Better diagnostic float handling
+
 		vim.api.nvim_create_autocmd("CursorHold", {
 			callback = function()
 				-- Only show diagnostics if there are any at the current position
@@ -179,7 +181,8 @@ return {
 		})
 
 		-- Close diagnostic floats when switching buffers or moving cursor
-		vim.api.nvim_create_autocmd({ "BufLeave", "CursorMoved", "CursorMovedI" }, {
+		--[[
+        vim.api.nvim_create_autocmd({ "BufLeave", "CursorMoved", "CursorMovedI" }, {
 			callback = function()
 				-- Close any open diagnostic floats
 				for _, win in ipairs(vim.api.nvim_list_wins()) do
@@ -194,24 +197,43 @@ return {
 					end
 				end
 			end,
+		})]]
+
+		-- Close diagnostic floats when switching buffers or moving cursor
+
+		vim.api.nvim_create_autocmd({ "BufLeave", "CursorMoved", "CursorMovedI" }, {
+			callback = function()
+				for _, win in ipairs(vim.api.nvim_list_wins()) do
+					local config = vim.api.nvim_win_get_config(win)
+					if config.relative ~= "" then -- floating window
+						local buf = vim.api.nvim_win_get_buf(win)
+						local ft = vim.bo[buf].filetype
+						local bt = vim.bo[buf].buftype
+						-- Only close diagnostic-like floats, not plugin UIs
+						if (ft == "vim" or ft == "") and bt == "" then
+							pcall(vim.api.nvim_win_close, win, true)
+						end
+					end
+				end
+			end,
 		})
 
 		-- Alternative: Use a more targeted approach with keymaps instead of autocmd
 		-- Comment out the autocmd above and use this instead if you prefer manual control:
 		--[[
-vim.keymap.set("n", "<leader>d", function()
-	vim.diagnostic.open_float(nil, {
-		focusable = false,
-		close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
-		border = "rounded",
-		source = true,
-		prefix = " ",
-		scope = "cursor",
-		wrap = true,
-		max_width = 80,
-	})
-end, { desc = "Show line diagnostics" })
-]]
+        vim.keymap.set("n", "<leader>d", function()
+            vim.diagnostic.open_float(nil, {
+                focusable = false,
+                close_events = { "BufLeave", "CursorMoved", "InsertEnter" },
+                border = "rounded",
+                source = true,
+                prefix = " ",
+                scope = "cursor",
+                wrap = true,
+                max_width = 80,
+            })
+        end, { desc = "Show line diagnostics" })
+        ]]
 
 		local autopairs = require("nvim-autopairs")
 		autopairs.setup({})

@@ -1,11 +1,9 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": 
-    [
+    "actions": [
         {
-            "command": 
-            {
+            "command": {
                 "action": "copy",
                 "singleLine": false
             },
@@ -16,8 +14,7 @@
             "id": "User.paste"
         },
         {
-            "command": 
-            {
+            "command": {
                 "action": "splitPane",
                 "split": "auto",
                 "splitMode": "duplicate"
@@ -36,8 +33,7 @@
     "initialCols": 180,
     "initialPosition": "0,0",
     "initialRows": 60,
-    "keybindings": 
-    [
+    "keybindings": [
         {
             "id": "User.copy.644BA8F2",
             "keys": "ctrl+c"
@@ -55,22 +51,18 @@
             "keys": "alt+shift+d"
         }
     ],
-    "newTabMenu": 
-    [
+    "newTabMenu": [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles": 
-    {
-        "defaults": 
-        {
+    "profiles": {
+        "defaults": {
             "colorScheme": "Atom One Dark",
             "opacity": 80,
             "useAcrylic": true
         },
-        "list": 
-        [
+        "list": [
             {
                 "commandline": "%SystemRoot%\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
                 "guid": "{61c54bbd-c2c6-5271-96e7-009a87ff44bf}",
@@ -93,8 +85,7 @@
                 "backgroundImage": "desktopWallpaper",
                 "backgroundImageOpacity": 0.1,
                 "colorScheme": "Campbell",
-                "font": 
-                {
+                "font": {
                     "face": "FiraCode Nerd Font"
                 },
                 "guid": "{d8e96812-b789-5068-a5ae-10b2fb53e95f}",
@@ -115,8 +106,7 @@
             }
         ]
     },
-    "schemes": 
-    [
+    "schemes": [
         {
             "background": "#282C34",
             "black": "#000000",

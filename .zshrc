@@ -82,7 +82,6 @@ plugins=(
     dirhistory
     npm 
     node 
-    zsh_reload
     zsh-autosuggestions 
     zsh-syntax-highlighting 
     zsh-completions
@@ -133,3 +132,7 @@ setopt HIST_IGNORE_SPACE
 setopt HIST_REDUCE_BLANKS
 
 export PATH=$PATH:/usr/local/go/bin
+export GOROOT=/usr/local/go
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
+

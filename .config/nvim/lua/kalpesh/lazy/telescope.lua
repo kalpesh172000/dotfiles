@@ -2,10 +2,12 @@ return {
     "nvim-telescope/telescope.nvim",
     name = "telescope",
 
-    tag = "0.1.5",
+    --[[ commit = nil, ]]
+    --[[ tag = "0.1.8", ]]
+    --[[ branch= "0.1.x", ]]
 
     dependencies = {
-        "nvim-lua/plenary.nvim"
+        "plenary"
     },
 
     config = function()

@@ -288,6 +288,22 @@ return function()
 
 	-- GO Language Server
 	vim.lsp.config.gopls = {
+		on_attach = function(client, bufnr)
+			local function buf_set_keymap(...)
+				vim.api.nvim_buf_set_keymap(bufnr, ...)
+			end
+			local opts = { noremap = true, silent = true }
+
+			-- Useful key mappings
+            -- Goes to the place where function was defined 
+			buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+            -- Goes to the place where fucnction was referenced/called 
+			buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+            -- Goes to the implementation of an interface or abstract fuction
+			buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+            -- Displays documentation about the function/variable in a floating window
+			buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+		end,
 		cmd = { vim.fn.exepath("gopls") },
 		root_markers = {
 			"go.mod",
@@ -344,15 +360,11 @@ return function()
 				},
 				-- Import organization
 				["local"] = "",
-				-- Formatting
-				formatting = {
-					gofumpt = true,
-				},
 			},
 		},
 		flags = {
 			debounce_text_changes = 200,
-            exit_timeout = 1000,
+			exit_timeout = 1000,
 		},
 	}
 
