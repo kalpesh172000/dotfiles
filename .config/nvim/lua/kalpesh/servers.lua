@@ -295,14 +295,14 @@ return function()
 			local opts = { noremap = true, silent = true }
 
 			-- Useful key mappings
-            -- Goes to the place where function was defined 
+			-- Goes to the place where function was defined
 			buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
-            -- Goes to the place where fucnction was referenced/called 
+			-- Goes to the place where fucnction was referenced/called
 			buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
-            -- Goes to the implementation of an interface or abstract fuction
+			-- Goes to the implementation of an interface or abstract fuction
 			buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
-            -- Displays documentation about the function/variable in a floating window
-			buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+			-- Displays documentation about the function/variable in a floating window
+			--buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
 		end,
 		cmd = { vim.fn.exepath("gopls") },
 		root_markers = {
@@ -365,6 +365,25 @@ return function()
 		flags = {
 			debounce_text_changes = 200,
 			exit_timeout = 1000,
+		},
+	}
+
+	-- Buf Language Server
+	vim.lsp.config.bufls = {
+		cmd = { vim.fn.exepath("bufls") },
+		filetypes = { "proto" },
+		root_markers = {
+			"buf.yaml",
+			"buf.work.yaml",
+			".git",
+		},
+		settings = {
+			buf = {
+				-- Enable formatting using buf format
+				formatting = {
+					enabled = true,
+				},
+			},
 		},
 	}
 

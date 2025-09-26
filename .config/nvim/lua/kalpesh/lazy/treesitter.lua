@@ -8,7 +8,7 @@ return {
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
                     "vimdoc", "javascript", "typescript", "c", "lua", "rust",
-                    "jsdoc", "bash", "cpp", "python", "html", "css","go" -- Add any languages you need
+                    "jsdoc", "bash", "cpp", "python", "html", "css","go", "proto" -- Add any languages you need
                 },
                 sync_install = false,
                 auto_install = true,

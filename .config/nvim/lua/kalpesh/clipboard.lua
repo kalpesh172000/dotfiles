@@ -1,3 +1,4 @@
+--[[ 
 vim.opt.clipboard:append("unnamedplus")
 vim.g.clipboard = {
     name = "win32yank",
@@ -11,3 +12,5 @@ vim.g.clipboard = {
     },
     cache_enabled = 0,
 }
+]]
+vim.opt.clipboard = "unnamedplus"

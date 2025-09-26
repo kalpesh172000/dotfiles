@@ -40,3 +40,7 @@ vim.keymap.set("n", "<M-l>", "<C-w>l", { desc = "Move to the right split" }) -- 
 -- in windows terminal ctrl-v is assinged to the paster thats why we have to do this work around
 -- change this in case of you using the this ide in ubuntu without wsl / remote ssh
 vim.api.nvim_set_keymap("n", "<C-b>", "<C-v>", { noremap = true, silent = true, desc = "Visual Block Mode" })
+
+--this is for refactoring the code
+vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, { desc = "Rename symbol" })
+vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })

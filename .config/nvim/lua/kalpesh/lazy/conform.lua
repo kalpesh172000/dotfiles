@@ -24,6 +24,7 @@ return {
 				scss = { "prettierd", "prettier" },
 				yarn = { "yaml-language-server" },
 				go = { "gofumpt" },
+				proto = { "buf" }, -- use buf for .proto files
 			},
 			stop_after_first = true, -- Apply stop_after_first globally
 		})
