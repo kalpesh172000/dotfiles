@@ -116,7 +116,15 @@ source $ZSH/oh-my-zsh.sh
 #
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
-# alias ohmyzsh="mate ~/.oh-my-zsh"
+
+## Force X11 even if Wayland sneaks in
+export SDL_VIDEODRIVER=x11 
+
+# Optional: disable VSync for smoother FPS
+export vblank_mode=0
+
+alias ohmyzsh="mate ~/.oh-my-zsh"
+
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm

@@ -1,12 +1,10 @@
 vim.opt.nu = true
 vim.opt.relativenumber = true
 
-
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true
-
 
 vim.opt.smartindent = true
 vim.opt.wrap = false
@@ -40,3 +38,12 @@ vim.g.rainbow_active = 1
 
 -- Optionally ensure 'syntax on' is enabled
 vim.cmd("syntax on")
+
+-- Show statusline only once, at the very bottom
+vim.opt.laststatus = 3
+
+-- Don’t reserve a command line when not needed
+vim.opt.cmdheight = 0
+
+vim.opt.showcmd = false
+vim.opt.showmode = false

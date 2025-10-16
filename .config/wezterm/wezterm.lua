@@ -6,11 +6,21 @@ local config = wezterm.config_builder()
 config.enable_wayland = false
 
 --Font Settings
-config.font_size = 12
+config.font_size = 13
 config.line_height = 1.0
 config.font = wezterm.font("FiraCode Nerd Font")
 
 -- Theme ------------------------------------------------------------------
+-- Remove all padding
+config.window_padding = {
+	left = 0,
+	right = 0,
+	top = 0,
+	bottom = 0,
+}
+
+config.window_decorations = "RESIZE"
+
 --config.color_scheme = "Atom One Dark"
 config.color_scheme = "AtomOneDark"
 
@@ -57,11 +67,12 @@ config.background = {
 	{
 		source = {
 			--File = "/home/kalpesh/Pictures/wallpapers/4321.jpg",
-			File = "/home/kalpesh/Pictures/wallpapers/1234.png",
+			File = "/home/kalpesh/dotfiles/.config/wezterm/wallpapers/neoncityb.jpg",
+
 		},
 		opacity = 1.0, -- make wallpaper transparent
 		hsb = {
-			brightness = 0.12, -- tweak brightness
+			brightness = 0.10, -- tweak brightness
 			saturation = 1.0,
 			hue = 1.0,
 		},
@@ -75,10 +86,17 @@ config.background = {
 
 -- Right-click menu ----------------------------------------------------------------
 config.mouse_bindings = {
-	{
-		event = { Down = { streak = 1, button = "Right" } },
-		mods = "NONE",
-		action = wezterm.action.ShowLauncher,
-	},
+  -- Keep your right-click menu
+  {
+    event = { Down = { streak = 1, button = "Right" } },
+    mods = "NONE",
+    action = wezterm.action.ShowLauncher,
+  },
 }
+
+-- Misc ------------------------------------------------------------------------------
+config.scrollback_lines = 10000 -- or 20000 if you want more
+
+config.enable_scroll_bar= false
+
 return config
