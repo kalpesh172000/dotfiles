@@ -134,6 +134,9 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
 export PATH="/home/kalpesh/.avm/bin:$PATH"
 export PATH="$PATH:/opt/nvim-linux-x86_64/bin"
 alias vi="nvim"
+# this is to make the nvim the defaul text editor for all the editors 
+export EDITOR="vi"
+export VISUAL="vi"
 
 setopt HIST_SAVE_NO_DUPS
 setopt HIST_IGNORE_SPACE
