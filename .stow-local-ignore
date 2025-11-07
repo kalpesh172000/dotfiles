@@ -5,3 +5,5 @@ settings.json
 .gitconfig
 .vscode
 ssh_remote_access_security.txt
+.DS_Store
+fish
