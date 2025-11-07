@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+
+SESSION="surge"
+
+case "$1" in
+  start)
+    echo "🚀 Starting Docker containers..."
+    # Start containers if not running
+    for svc in mysql redis minio inngest; do
+      if [ "$(docker ps -q -f name=$svc)" ]; then
+        echo "✔️  $svc already running."
+      else
+        echo "🔄 Starting $svc..."
+        docker start $svc >/dev/null 2>&1 || echo "⚠️  $svc not found. Please recreate it."
+      fi
+    done
+
+    # Wait a few seconds for Docker services to stabilize
+    sleep 3
+
+    echo "💻 Launching tmux workspace '$SESSION'..."
+
+    tmux has-session -t $SESSION 2>/dev/null
+    if [ $? != 0 ]; then
+      echo "Creating new tmux session '$SESSION'..."
+
+      # Create base session (detached)
+      tmux new-session -d -s $SESSION -c ~/projects/surge
+
+      # Window 1: Editor 
+      tmux rename-window -t $SESSION:1 'editor'
+      tmux send-keys -t $SESSION:editor 'vi .' C-m
+
+      # Window 2: Root 
+      tmux new-window -t $SESSION:2 -n 'root' -c ~/projects/surge
+      tmux send-keys -t $SESSION:root 'clear' C-m
+
+      # Window 2: Cli 
+      tmux new-window -t $SESSION:3 -n 'cli' -c ~/projects/surge/apps/cli
+      tmux send-keys -t $SESSION:root 'clear' C-m
+
+      # Window 3: Docker Monitor
+      tmux new-window -t $SESSION:3 -n 'docker' -c ~/projects/surge
+      tmux send-keys -t $SESSION:docker 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"' C-m
+
+      # Window 4: Server 
+      tmux new-window -t $SESSION:4 -n 'server' -c ~/projects/surge
+      tmux send-keys -t $SESSION:root 'npm run dev' C-m
+    fi
+
+    # Attach to session
+    tmux attach -t $SESSION
+    ;;
+
+  stop)
+    echo "🛑 Stopping tmux session..."
+    tmux kill-session -t $SESSION 2>/dev/null
+
+    echo "🛑 Stopping Docker containers..."
+    for svc in mysql redis minio inngest; do
+      docker stop $svc >/dev/null 2>&1 && echo "Stopped $svc"
+    done
+    ;;
+
+  *)
+    echo "Usage: surge {start|stop}"
+    ;;
+esac
