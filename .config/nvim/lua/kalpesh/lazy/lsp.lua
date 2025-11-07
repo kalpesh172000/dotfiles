@@ -59,6 +59,7 @@ return {
 		---------------------- MASON-LSPCONFIG END ----------------------
 
 		----------------------  TAILWIND-TOOLS START ----------------------
+		--[[
 
 		require("tailwind-tools").setup({
 			-- Preview configuration for Tailwind classes (optional)
@@ -93,6 +94,7 @@ return {
 			"<cmd>TailwindToolsPreview<CR>",
 			{ noremap = true, silent = true, desc = "Open Tailwind Preview" }
 		)
+]]
 		----------------------  TAILWIND-TOOLS END ----------------------
 
 		---------------------- CMP SETUP START ----------------------
