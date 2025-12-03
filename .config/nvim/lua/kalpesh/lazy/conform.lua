@@ -7,11 +7,11 @@ return {
 		conform.setup({
 			formatters_by_ft = {
 				lua = { "stylua" },
-				javascript = { "prettierd", "prettier" },
+				javascript = { "prettierd", "eslint_d" },
+				typescript = { "prettierd", "eslint_d" },
+				typescriptreact = { "prettierd", "eslint_d" },
 				cpp = { "clang-format" },
-				typescript = { "prettierd", "prettier" },
 				javascriptreact = { "prettierd", "prettier" },
-				typescriptreact = { "prettierd", "prettier" },
 				json = { "prettierd", "prettier" },
 				java = { "google-java-format" },
 				markdown = { "prettierd", "prettier" },
