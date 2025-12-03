@@ -25,6 +25,10 @@ return {
 					return "// %s"
 				end
 
+				if vim.bo.filetype == "typescript" then
+					return "// %s"
+				end
+
 				-- Default for other filetypes
 				return ts_internal.calculate_commentstring({
 					key = ctx.ctype == U.ctype.line and "__default" or "__multiline",
