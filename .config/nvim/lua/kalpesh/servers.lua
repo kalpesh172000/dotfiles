@@ -3,7 +3,14 @@ return function()
 
 	-- C/C++ Language Server
 	vim.lsp.config.clangd = {
-		cmd = { vim.fn.exepath("clangd") },
+		cmd = {
+			vim.fn.exepath("clangd"),
+			"--compile-commands-dir=build",
+			"--background-index",
+			"--clang-tidy",
+			"--completion-style=detailed",
+			"--header-insertion=iwyu",
+		},
 		root_markers = {
 			"compile_commands.json",
 			"compile_flags.txt",
@@ -224,6 +231,24 @@ return function()
 
 	-- TypeScript Language Server
 	vim.lsp.config.ts_ls = {
+		on_attach = function(client, bufnr)
+			local function buf_set_keymap(...)
+				vim.api.nvim_buf_set_keymap(bufnr, ...)
+			end
+			local opts = { noremap = true, silent = true }
+
+			-- Useful key mappings
+			-- Goes to the place where function was defined
+			buf_set_keymap("n", "gd", "<cmd>lua vim.lsp.buf.definition()<CR>", opts)
+			-- Goes to the place where fucnction was referenced/called
+			buf_set_keymap("n", "gr", "<cmd>lua vim.lsp.buf.references()<CR>", opts)
+			-- Goes to the implementation of an interface or abstract fuction
+			buf_set_keymap("n", "gi", "<cmd>lua vim.lsp.buf.implementation()<CR>", opts)
+			-- Displays documentation about the function/variable in a floating window
+			buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
+			-- **Go to type definition**
+			vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
+		end,
 		cmd = { vim.fn.exepath("typescript-language-server"), "--stdio" },
 		root_markers = {
 			"package.json",
@@ -385,6 +410,52 @@ return function()
 				},
 			},
 		},
+	}
+
+	-- ESLint Language Server
+	vim.lsp.config.eslint = {
+		cmd = { vim.fn.exepath("vscode-eslint-language-server"), "--stdio" },
+		root_markers = {
+			".eslintrc",
+			".eslintrc.js",
+			".eslintrc.cjs",
+			".eslintrc.json",
+			"eslint.config.js",
+			"package.json",
+			".git",
+		},
+		filetypes = {
+			"javascript",
+			"javascriptreact",
+			"typescript",
+			"typescriptreact",
+			"vue",
+			"svelte",
+		},
+		settings = {
+			format = true,
+			validate = "on",
+			codeAction = {
+				disableRuleComment = {
+					enable = true,
+					location = "separateLine",
+				},
+				showDocumentation = {
+					enable = true,
+				},
+			},
+			run = "onType",
+			workingDirectory = { mode = "auto" },
+		},
+		on_attach = function(client, bufnr)
+			-- Enable ESLint formatting
+			client.server_capabilities.documentFormattingProvider = true
+
+			local opts = { noremap = true, silent = true }
+			vim.keymap.set("n", "<leader>f", function()
+				vim.lsp.buf.format({ async = false })
+			end, opts)
+		end,
 	}
 
 	-- Custom notification filter for rust-analyzer

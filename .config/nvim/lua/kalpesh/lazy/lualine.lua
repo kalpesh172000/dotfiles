@@ -4,6 +4,11 @@ return {
 	name = "lualine",
 	config = function()
 		require("lualine").setup({
+			sections = {
+				lualine_c = {
+					{ "filename", path = 3 }, -- 3 = absolute path
+				},
+			},
 			options = {
 				theme = "auto",
 				globalstatus = true, -- same as laststatus=3

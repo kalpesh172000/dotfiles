@@ -1,3 +1,4 @@
+export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:$HOME/.local/bin:/usr/local/bin:$PATH
 
@@ -125,14 +126,14 @@ export vblank_mode=0
 
 alias ohmyzsh="mate ~/.oh-my-zsh"
 
+export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"
-export PATH="/home/kalpesh/.avm/bin:$PATH"
 export PATH="$PATH:/opt/nvim/bin"
+export PATH="$HOME/.local/bin:$PATH"
 alias vi="nvim"
 # this is to make the nvim the defaul text editor for all the editors 
 export EDITOR="vi"
@@ -147,9 +148,11 @@ export GOROOT=/usr/local/go
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 
+export PATH="/opt/homebrew/bin:$PATH"
+export PATH="/opt/homebrew/opt/python@3.13/bin:$PATH"
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/home/kalpesh/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home/kalpesh/Downloads/google-cloud-sdk/path.zsh.inc'; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/home/kalpesh/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/kalpesh/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+# if [ -f '/home/kalpesh/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/kalpesh/Downloads/google-cloud-sdk/completion.zsh.inc'; fi

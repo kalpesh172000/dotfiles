@@ -6,8 +6,21 @@ vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
 vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 
 vim.keymap.set("n", "J", "mzJ`z")
-vim.keymap.set("n", "<C-d>", "<C-d>zz")
-vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- vim.keymap.set("n", "<C-d>", "<C-d>zz")
+-- Scroll down by 25% of window height and center cursor
+vim.keymap.set("n", "<C-d>", function()
+	local scroll_amount = math.floor(vim.fn.winheight(0) * 0.25)
+	vim.cmd("normal! " .. scroll_amount .. "jzz")
+end)
+
+-- vim.keymap.set("n", "<C-u>", "<C-u>zz")
+-- Scroll up by 25% of window height and center cursor
+vim.keymap.set("n", "<C-u>", function()
+	local scroll_amount = math.floor(vim.fn.winheight(0) * 0.25)
+	vim.cmd("normal! " .. scroll_amount .. "kzz")
+end)
+
 vim.keymap.set("n", "n", "nzzzv")
 vim.keymap.set("n", "N", "Nzzzv")
 
@@ -26,9 +39,12 @@ vim.keymap.set("x", "<leader>p", [["_dP]])
 --this delete operation not copy the deleted text in clipboard preserving
 --previous clipboard
 vim.keymap.set({ "n", "v" }, "<leader>d", '"_d')
+
 vim.keymap.set("n", "Q", "<nop>") --ysa<"
 
+-- search and replace case insensitive
 vim.keymap.set("n", "<leader>s", [[:%s/\<<C-r><C-w>\>/<C-r><C-w>/gI<Left><Left><Left>]])
+-- makes the current file executable
 vim.keymap.set("n", "<leader>x", "<cmd>!chmod +x %<CR>", { silent = true })
 
 --cursor movment through split screen

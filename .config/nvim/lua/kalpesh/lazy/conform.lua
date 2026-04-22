@@ -14,7 +14,7 @@ return {
 				javascriptreact = { "prettierd", "prettier" },
 				json = { "prettierd", "prettier" },
 				java = { "google-java-format" },
-				markdown = { "prettierd", "prettier" },
+				markdown = { "prettierd", "markdownlint" },
 				rust = { "rustfmt" },
 				erb = { "htmlbeautifier" },
 				html = { "htmlbeautifier" },
@@ -26,7 +26,7 @@ return {
 				go = { "gofumpt" },
 				proto = { "buf" }, -- use buf for .proto files
 			},
-			stop_after_first = true, -- Apply stop_after_first globally
+			stop_after_first = false, -- Apply stop_after_first globally
 		})
 
 		-- Always strip CR for Go files after formatting

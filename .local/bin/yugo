@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-SESSION="surge"
+SESSION="yugo"
 
 case "$1" in
   start)
@@ -20,7 +20,7 @@ case "$1" in
       ((ATTEMPTS++))
       if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
         echo "❌ Docker did not start after waiting ~30 seconds."
-        echo "👉 Please open Docker Desktop manually, wait for it to start, then run: surge start"
+        echo "👉 Please open Docker Desktop manually, wait for it to start, then run: yugo start"
         exit 1
       fi
       echo "⏳ Waiting for Docker to start... ($ATTEMPTS)"
@@ -48,31 +48,31 @@ case "$1" in
     if [ $? != 0 ]; then
       echo "Creating new tmux session '$SESSION'..."
 
-      tmux new-session -d -s $SESSION -c ~/projects/surge
+      tmux new-session -d -s $SESSION -c ~/projects/yugo
       tmux rename-window -t $SESSION:1 'editor'
       tmux send-keys -t $SESSION:editor 'nvim .' C-m
 
-      tmux new-window -t $SESSION:2 -n 'root' -c ~/projects/surge
+      tmux new-window -t $SESSION:2 -n 'root' -c ~/projects/yugo
       tmux send-keys -t $SESSION:root 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"' C-m
 
-      tmux new-window -t $SESSION:3 -n 'cli' -c ~/projects/surge/apps/cli
+      tmux new-window -t $SESSION:3 -n 'cli' -c ~/projects/yugo/apps/cli
       tmux send-keys -t $SESSION:cli 'clear' C-m
 
-      tmux new-window -t $SESSION:4 -n 'server' -c ~/projects/surge
-      tmux send-keys -t $SESSION:server 'yarn dev --filter={api...,henchman...,web-game...,backoffice...}' C-m
+      tmux new-window -t $SESSION:4 -n 'server' -c ~/projects/yugo
+      tmux send-keys -t $SESSION:server 'yarn install && yarn build && yarn build && yarn dev' C-m
 
-      sleep 5
-
-      tmux new-window -t $SESSION:5 -n 'zrokapp' -c ~/projects/surge
-      tmux send-keys -t $SESSION:zrokapp 'zrok share reserved kalpeshsurgeapp' C-m
-
-      sleep 5
-
-      tmux new-window -t $SESSION:6 -n 'zrokapi' -c ~/projects/surge
-      tmux send-keys -t $SESSION:zrokapi 'zrok share reserved kalpeshsurgeapi' C-m
-
-      tmux new-window -t $SESSION:7 -n 'gemini' -c ~/projects/surge
-      tmux send-keys -t $SESSION:gemini 'gemini' C-m
+      # sleep 5
+      #
+      # tmux new-window -t $SESSION:5 -n 'zrokapp' -c ~/projects/yugo
+      # tmux send-keys -t $SESSION:zrokapp 'zrok share reserved kalpeshyugoapp' C-m
+      #
+      # sleep 5
+      #
+      # tmux new-window -t $SESSION:6 -n 'zrokapi' -c ~/projects/yugo
+      # tmux send-keys -t $SESSION:zrokapi 'zrok share reserved kalpeshyugoapi' C-m
+      #
+      # tmux new-window -t $SESSION:7 -n 'gemini' -c ~/projects/yugo
+      # tmux send-keys -t $SESSION:gemini 'gemini' C-m
     fi
 
     tmux attach -t $SESSION
@@ -96,7 +96,7 @@ case "$1" in
 
     if [ -z "$FILENAME" ]; then
       echo "❌ Migration filename is required"
-      echo "👉 Usage: surge generate <migration-name>"
+      echo "👉 Usage: yugo generate <migration-name>"
       exit 1
     fi
 
@@ -108,6 +108,6 @@ case "$1" in
     node ./dist/main.js db migrations:run
     ;;
   *)
-    echo "Usage: surge {start|stop|docker|generate filename|run}"
+    echo "Usage: yugo {start|stop|docker|generate filename|run}"
     ;;
 esac

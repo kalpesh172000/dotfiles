@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+SESSION="tvulkan"
+
+case "$1" in
+  start)
+    tmux has-session -t $SESSION 2>/dev/null
+    if [ $? != 0 ]; then
+      echo "Creating new tmux session '$SESSION'..."
+
+      tmux new-session -d -s $SESSION -c ~/projects/vulkan/testvulkan
+      tmux rename-window -t $SESSION:1 'editor'
+      tmux send-keys -t $SESSION:editor 'nvim .' C-m
+
+      tmux new-window -t $SESSION:2 -n 'root' -c ~/projects/vulkan/testvulkan
+      tmux send-keys -t $SESSION:root 'clear' C-m
+
+      tmux new-window -t $SESSION:3 -n 'build' -c ~/projects/vulkan/testvulkan/build/
+      tmux send-keys -t $SESSION:build 'clear' C-m
+    fi
+
+    tmux attach -t $SESSION
+    ;;
+
+  stop)
+    echo "🛑 Stopping tmux session..."
+    tmux kill-session -t $SESSION 2>/dev/null
+    ;;
+
+  run)
+    cmake --build .
+    ./testvulkan
+    ;;
+
+  *)
+    echo "Usage: surge {start|stop|docker|generate filename|run}"
+    ;;
+esac

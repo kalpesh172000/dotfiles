@@ -1,0 +1,46 @@
+# This file contains fish universal variable definitions.
+# VERSION: 3.0
+SETUVAR --export --path PATH:/opt/homebrew/opt/python\x403\x2e13/bin\x1e/usr/local/go/bin/\x1e/usr/local/go/bin\x1e/Users/kalpesh/go/bin\x1e/opt/nvim/bin\x1e/Users/kalpesh/\x2elocal/bin\x1e/Users/kalpesh/\x2elocal/state/fnm_multishells/23023_1764658948014/bin\x1e/opt/homebrew/bin\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/usr/local/go/bin/\x1e/usr/local/go/bin\x1e/Users/kalpesh/go/bin\x1e/opt/nvim/bin\x1e/Users/kalpesh/\x2elocal/bin\x1e/Users/kalpesh/\x2elocal/state/fnm_multishells/22940_1764658945414/bin\x1e/opt/homebrew/bin\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/usr/local/go/bin\x1e/Users/kalpesh/go/bin\x1e/usr/local/go/bin/\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/Users/kalpesh/\x2elocal/bin\x1e/opt/nvim/bin\x1e/Users/kalpesh/\x2elocal/state/fnm_multishells/22708_1764658847574/bin\x1e/opt/homebrew/opt\x1e/opt/homebrew/bin\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/usr/local/go/bin\x1e/Users/kalpesh/go/bin\x1e/usr/local/go/bin/\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/Users/kalpesh/\x2elocal/bin\x1e/opt/nvim/bin\x1e/Users/kalpesh/\x2elocal/state/fnm_multishells/22671_1764658844671/bin\x1e/opt/homebrew/opt\x1e/opt/homebrew/bin\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/usr/local/go/bin\x1e/Users/kalpesh/go/bin\x1e/usr/local/go/bin/\x1e/opt/homebrew/opt/python\x403\x2e13/bin\x1e/Users/kalpesh/\x2elocal/bin\x1e/opt/nvim/bin\x1e/Users/kalpesh/\x2elocal/state/fnm_multishells/22300_1764658681802/bin\x1e/opt/homebrew/bin\x1e/usr/local/bin\x1e/System/Cryptexes/App/usr/bin\x1e/usr/bin\x1e/bin\x1e/usr/sbin\x1e/sbin\x1e/var/run/com\x2eapple\x2esecurity\x2ecryptexd/codex\x2esystem/bootstrap/usr/local/bin\x1e/var/run/com\x2eapple\x2esecurity\x2ecryptexd/codex\x2esystem/bootstrap/usr/bin\x1e/var/run/com\x2eapple\x2esecurity\x2ecryptexd/codex\x2esystem/bootstrap/usr/appleinternal/bin\x1e/opt/pmk/env/global/bin\x1e/usr/local/go/bin\x1e/opt/homebrew/bin
+SETUVAR __fish_initialized:3800
+SETUVAR _fisher_jorgebucaran_2F_fisher_files:\x7e/\x2econfig/fish/functions/fisher\x2efish\x1e\x7e/\x2econfig/fish/completions/fisher\x2efish
+SETUVAR _fisher_plugins:jorgebucaran/fisher
+SETUVAR _fisher_upgraded_to_4_4:\x1d
+SETUVAR fish_color_autosuggestion:ffaf5f
+SETUVAR fish_color_cancel:\x2d\x2dreverse
+SETUVAR fish_color_command:00d7d7
+SETUVAR fish_color_comment:808080
+SETUVAR fish_color_cwd:green
+SETUVAR fish_color_cwd_root:red
+SETUVAR fish_color_end:ff5f00
+SETUVAR fish_color_error:brred
+SETUVAR fish_color_escape:brcyan
+SETUVAR fish_color_history_current:\x2d\x2dbold
+SETUVAR fish_color_host:normal
+SETUVAR fish_color_host_remote:yellow
+SETUVAR fish_color_keyword:\x1d
+SETUVAR fish_color_normal:normal
+SETUVAR fish_color_operator:brcyan
+SETUVAR fish_color_option:\x1d
+SETUVAR fish_color_param:cyan
+SETUVAR fish_color_quote:5faf5f
+SETUVAR fish_color_redirection:5fafff\x1e\x2d\x2dbold
+SETUVAR fish_color_search_match:white\x1e\x2d\x2dbold\x1e\x2d\x2dbackground\x3dbrblack
+SETUVAR fish_color_selection:white\x1e\x2d\x2dbold\x1e\x2d\x2dbackground\x3dbrblack
+SETUVAR fish_color_status:red
+SETUVAR fish_color_user:brgreen
+SETUVAR fish_color_valid_path:\x2d\x2dunderline\x3dsingle
+SETUVAR fish_key_bindings:fish_default_key_bindings
+SETUVAR fish_pager_color_background:\x1d
+SETUVAR fish_pager_color_completion:normal
+SETUVAR fish_pager_color_description:yellow\x1e\x2d\x2ditalics
+SETUVAR fish_pager_color_prefix:normal\x1e\x2d\x2dbold\x1e\x2d\x2dunderline\x3dsingle
+SETUVAR fish_pager_color_progress:brwhite\x1e\x2d\x2dbold\x1e\x2d\x2dbackground\x3dcyan
+SETUVAR fish_pager_color_secondary_background:\x1d
+SETUVAR fish_pager_color_secondary_completion:\x1d
+SETUVAR fish_pager_color_secondary_description:\x1d
+SETUVAR fish_pager_color_secondary_prefix:\x1d
+SETUVAR fish_pager_color_selected_background:\x2d\x2dreverse
+SETUVAR fish_pager_color_selected_completion:\x1d
+SETUVAR fish_pager_color_selected_description:\x1d
+SETUVAR fish_pager_color_selected_prefix:\x1d
+SETUVAR fish_user_paths:/Users/kalpesh/\x2eantigravity/antigravity/bin\x1e/opt/homebrew/opt/mysql\x2dclient/bin

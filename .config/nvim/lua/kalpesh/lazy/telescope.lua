@@ -11,8 +11,25 @@ return {
 	},
 
 	config = function()
+		local actions = require("telescope.actions")
 		require("telescope").setup({
 			pickers = {
+				buffers = {
+					sort_mru = true,
+					sort_lastused = true,
+					ignore_current_buffer = true,
+					theme = "dropdown",
+					previewer = false,
+					mappings = {
+						n = {
+							["d"] = actions.delete_buffer, -- press d to delete buffer
+							["x"] = actions.delete_buffer, -- press x to delete buffer
+						},
+						i = {
+							["<C-x>"] = actions.delete_buffer,
+						},
+					},
+				},
 				find_files = {
 					hidden = true,
 					no_ignore = true,
@@ -31,6 +48,11 @@ return {
 				},
 			},
 			defaults = {
+				mappings = {
+					n = {
+						["q"] = actions.close, -- Press q in NORMAL mode to close Telescope
+					},
+				},
 				vimgrep_arguments = {
 					"rg",
 					"--follow", -- Follow symbolic links
@@ -56,6 +78,7 @@ return {
 
 		local builtin = require("telescope.builtin")
 		vim.keymap.set("n", "<leader>pf", builtin.find_files, {})
+		vim.keymap.set("n", "<leader>pb", "<cmd>Telescope buffers<CR>", { desc = "List buffers" })
 		vim.keymap.set("n", "<C-p>", builtin.git_files, {})
 		vim.keymap.set("n", "<leader>pws", function()
 			local word = vim.fn.expand("<cword>")
@@ -69,5 +92,6 @@ return {
 			builtin.grep_string({ search = vim.fn.input("Grep > ") })
 		end)
 		vim.keymap.set("n", "<leader>vh", builtin.help_tags, {})
+		vim.keymap.set("n", "<leader>pg", "<cmd>Telescope live_grep<CR>")
 	end,
 }
