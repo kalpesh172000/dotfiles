@@ -41,6 +41,7 @@ set -gx VK_LAYER_PATH $VULKAN_SDK/share/vulkan/explicit_layer.d
 # --- Git Abbreviations ---
 abbr --add gst "git status"
 abbr --add ga "git add"
+abbr --add gaa "git add ."
 abbr --add gap "git add -p"
 abbr --add gan "git add -N"
 abbr --add gc "git commit"
