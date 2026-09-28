@@ -64,7 +64,6 @@ abbr --add sg "surge generate"
 abbr --add sr "surge run"
 # ------------------------- 
 
-
 # Added by Antigravity
 fish_add_path /Users/kalpesh/.antigravity/antigravity/bin
 
@@ -76,3 +75,27 @@ fish_add_path /Users/kalpesh/.antigravity/antigravity/bin
 
 # Added by Antigravity
 fish_add_path /Users/kalpesh/.antigravity/antigravity/bin
+
+# Added by Antigravity IDE
+fish_add_path /Users/kalpesh/.antigravity-ide/antigravity-ide/bin
+
+# Added by Antigravity IDE
+fish_add_path /Users/kalpesh/.antigravity-ide/antigravity-ide/bin
+
+# Added by Antigravity IDE
+fish_add_path /Users/kalpesh/.antigravity-ide/antigravity-ide/bin
+
+# Added by Antigravity IDE
+fish_add_path /Users/kalpesh/.antigravity-ide/antigravity-ide/bin
+
+# ----- vcpkg ---------
+set -gx PATH $HOME/vcpkg $PATH
+set -gx VCPKG_ROOT $HOME/vcpkg
+# ---------------------
+
+# Added by Antigravity IDE
+fish_add_path /Users/kalpesh/.antigravity-ide/antigravity-ide/bin
+
+
+# Added by Antigravity CLI installer
+set -gx PATH "/Users/kalpesh/.local/bin" $PATH
