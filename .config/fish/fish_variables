@@ -43,4 +43,4 @@ SETUVAR fish_pager_color_selected_background:\x2d\x2dreverse
 SETUVAR fish_pager_color_selected_completion:\x1d
 SETUVAR fish_pager_color_selected_description:\x1d
 SETUVAR fish_pager_color_selected_prefix:\x1d
-SETUVAR fish_user_paths:/Users/kalpesh/\x2eantigravity/antigravity/bin\x1e/opt/homebrew/opt/mysql\x2dclient/bin
+SETUVAR fish_user_paths:/Users/kalpesh/\x2eantigravity\x2dide/antigravity\x2dide/bin\x1e/Users/kalpesh/\x2eantigravity/antigravity/bin\x1e/opt/homebrew/opt/mysql\x2dclient/bin
