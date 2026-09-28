@@ -3,8 +3,9 @@ local dockApps = {
 	--[[ "Finder", ]]
 	"WezTerm",
 	"Google Chrome",
+	"Antigravity IDE",
 	"DBeaver",
-    "WhatsApp Web",
+	"WhatsApp Web",
 	"Spotify",
 }
 
@@ -37,27 +38,53 @@ local function cycleAppWindows(appName)
 		return
 	end
 
-	-- Sort windows by last use time (Chrome likes this better)
+	-- Sort windows by id so ordering is stable across presses
 	table.sort(wins, function(a, b)
-		return a:application():pid() == b:application():pid() and a:id() < b:id()
+		return a:id() < b:id()
 	end)
 
-	-- Retrieve index for this app
-	local idx = lastWindowIndex[appName] or 1
+	-- Was this app already the frontmost app?
+	local frontApp = hs.application.frontmostApplication()
+	local wasFocused = frontApp and frontApp:pid() == app:pid()
 
-	if idx > #wins then
-		idx = 1
+	local idx
+
+	if wasFocused then
+		-- Already on this app → cycle to the NEXT window
+		idx = lastWindowIndex[appName] or 1
+		idx = idx + 1
+		if idx > #wins then
+			idx = 1
+		end
+	else
+		-- Switching in from another app → try to focus the currently
+		-- focused window of THIS app (if any), otherwise fall back
+		-- to the last one we remember, otherwise window 1.
+		local focusedWin = app:focusedWindow()
+		idx = nil
+
+		if focusedWin then
+			for i, w in ipairs(wins) do
+				if w:id() == focusedWin:id() then
+					idx = i
+					break
+				end
+			end
+		end
+
+		if not idx then
+			idx = lastWindowIndex[appName] or 1
+		end
+
+		if idx > #wins then
+			idx = 1
+		end
 	end
 
 	-- Focus target window
 	wins[idx]:focus()
 
-	-- Prepare next index
-	idx = idx + 1
-	if idx > #wins then
-		idx = 1
-	end
-
+	-- Remember index for next time
 	lastWindowIndex[appName] = idx
 end
 
