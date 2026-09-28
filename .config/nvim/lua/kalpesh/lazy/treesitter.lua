@@ -21,6 +21,9 @@ return {
 					"css",
 					"go",
 					"proto", -- Add any languages you need
+					"glsl",
+					"markdown",
+					"markdown_inline",
 				},
 				sync_install = false,
 				auto_install = true,
