@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+SESSION="polymarket"
+
+case "$1" in
+  start)
+    echo "💻 Launching tmux workspace '$SESSION'..."
+
+    tmux has-session -t $SESSION 2>/dev/null
+    if [ $? != 0 ]; then
+      echo "Creating new tmux session '$SESSION'..."
+
+      tmux new-session -d -s $SESSION -c ~/projects/polymarket
+      tmux rename-window -t $SESSION:1 'editor'
+      tmux send-keys -t $SESSION:editor 'nvim .' C-m
+
+      tmux new-window -t $SESSION:2 -n 'root' -c ~/projects/polymarket
+      tmux send-keys -t $SESSION:root 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"' C-m
+
+      tmux new-window -t $SESSION:3 -n 'server' -c ~/projects/polymarket
+      tmux send-keys -t $SESSION:server 'yarn install && yarn build && yarn build && yarn dev' C-m
+
+    fi
+
+    tmux attach -t $SESSION
+    ;;
+
+  stop)
+    echo "🛑 Stopping tmux session..."
+    tmux kill-session -t $SESSION 2>/dev/null
+    ;;
+esac
