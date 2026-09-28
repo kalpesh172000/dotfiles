@@ -11,6 +11,7 @@ return {
 				typescript = { "prettierd", "eslint_d" },
 				typescriptreact = { "prettierd", "eslint_d" },
 				cpp = { "clang-format" },
+				c = { "clang-format" },
 				javascriptreact = { "prettierd", "prettier" },
 				json = { "prettierd", "prettier" },
 				java = { "google-java-format" },
