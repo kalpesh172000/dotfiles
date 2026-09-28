@@ -156,3 +156,7 @@ if [ -f '/home/kalpesh/Downloads/google-cloud-sdk/path.zsh.inc' ]; then . '/home
 
 # The next line enables shell command completion for gcloud.
 # if [ -f '/home/kalpesh/Downloads/google-cloud-sdk/completion.zsh.inc' ]; then . '/home/kalpesh/Downloads/google-cloud-sdk/completion.zsh.inc'; fi
+
+
+# Added by Antigravity CLI installer
+export PATH="/Users/kalpesh/.local/bin:$PATH"
