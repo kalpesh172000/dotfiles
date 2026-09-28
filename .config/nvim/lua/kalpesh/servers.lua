@@ -1,27 +1,34 @@
-return function()
+return function(capabilities)
+	local function exe(name)
+		local p = vim.fn.exepath(name)
+		return (p ~= nil and p ~= "") and p or name
+	end
+
 	-- LSP Configurations using vim.lsp.config
 
 	-- C/C++ Language Server
 	vim.lsp.config.clangd = {
 		cmd = {
-			vim.fn.exepath("clangd"),
-			"--compile-commands-dir=build",
+			exe("clangd"),
 			"--background-index",
 			"--clang-tidy",
 			"--completion-style=detailed",
 			"--header-insertion=iwyu",
+						"--all-scopes-completion",
+			"--function-arg-placeholders=1",
 		},
 		root_markers = {
 			"compile_commands.json",
 			"compile_flags.txt",
 			".clangd",
+			"build/compile_commands.json",
 			"CMakeLists.txt",
 			"Makefile",
 			".git",
 		},
-		capabilities = {
+		capabilities = vim.tbl_deep_extend("force", capabilities or {}, {
 			offsetEncoding = { "utf-16" },
-		},
+		}),
 		init_options = {
 			usePlaceholders = true,
 			completeUnimported = true,
@@ -31,7 +38,7 @@ return function()
 
 	-- CSS Language Server
 	vim.lsp.config.cssls = {
-		cmd = { vim.fn.exepath("vscode-css-language-server"), "--stdio" },
+		cmd = { exe("vscode-css-language-server"), "--stdio" },
 		root_markers = { "package.json", ".git" },
 		settings = {
 			css = {
@@ -57,7 +64,7 @@ return function()
 
 	-- Emmet Language Server
 	vim.lsp.config.emmet_language_server = {
-		cmd = { vim.fn.exepath("emmet-language-server"), "--stdio" },
+		cmd = { exe("emmet-language-server"), "--stdio" },
 		root_markers = { "package.json", ".git" },
 		filetypes = {
 			"css",
@@ -86,7 +93,7 @@ return function()
 
 	-- HTML Language Server
 	vim.lsp.config.html = {
-		cmd = { vim.fn.exepath("vscode-html-language-server"), "--stdio" },
+		cmd = { exe("vscode-html-language-server"), "--stdio" },
 		root_markers = { "package.json", ".git" },
 		init_options = {
 			configurationSection = { "html", "css", "javascript" },
@@ -109,7 +116,7 @@ return function()
 
 	-- JSON Language Server
 	vim.lsp.config.jsonls = {
-		cmd = { vim.fn.exepath("vscode-json-language-server"), "--stdio" },
+		cmd = { exe("vscode-json-language-server"), "--stdio" },
 		root_markers = { "package.json", ".git" },
 		init_options = {
 			provideFormatter = true,
@@ -124,7 +131,7 @@ return function()
 
 	-- Lua Language Server
 	vim.lsp.config.lua_ls = {
-		cmd = { vim.fn.exepath("lua-language-server") },
+		cmd = { exe("lua-language-server") },
 		root_markers = {
 			".luarc.json",
 			".luarc.jsonc",
@@ -160,7 +167,7 @@ return function()
 
 	-- Rust Analyzer
 	vim.lsp.config.rust_analyzer = {
-		cmd = { vim.fn.exepath("rust-analyzer") },
+		cmd = { exe("rust-analyzer") },
 		root_markers = {
 			"Cargo.toml",
 			"Cargo.lock",
@@ -196,7 +203,7 @@ return function()
 
 	-- Tailwind CSS Language Server
 	vim.lsp.config.tailwindcss = {
-		cmd = { vim.fn.exepath("tailwindcss-language-server"), "--stdio" },
+		cmd = { exe("tailwindcss-language-server"), "--stdio" },
 		root_markers = {
 			"tailwind.config.js",
 			"tailwind.config.ts",
@@ -249,7 +256,7 @@ return function()
 			-- **Go to type definition**
 			vim.keymap.set("n", "gD", vim.lsp.buf.type_definition, opts)
 		end,
-		cmd = { vim.fn.exepath("typescript-language-server"), "--stdio" },
+		cmd = { exe("typescript-language-server"), "--stdio" },
 		root_markers = {
 			"package.json",
 			"tsconfig.json",
@@ -287,7 +294,7 @@ return function()
 
 	-- YAML Language Server
 	vim.lsp.config.yamlls = {
-		cmd = { vim.fn.exepath("yaml-language-server"), "--stdio" },
+		cmd = { exe("yaml-language-server"), "--stdio" },
 		root_markers = {
 			".yamllint",
 			".yamllint.yml",
@@ -329,13 +336,12 @@ return function()
 			-- Displays documentation about the function/variable in a floating window
 			--buf_set_keymap("n", "K", "<cmd>lua vim.lsp.buf.hover()<CR>", opts)
 		end,
-		cmd = { vim.fn.exepath("gopls") },
+		cmd = { exe("gopls") },
 		root_markers = {
 			"go.mod",
 			"go.sum",
 			"go.work",
 			"go.work.sum",
-			".git",
 			"Gopkg.toml",
 			"Gopkg.lock",
 		},
@@ -395,7 +401,7 @@ return function()
 
 	-- Buf Language Server
 	vim.lsp.config.bufls = {
-		cmd = { vim.fn.exepath("bufls") },
+		cmd = { exe("bufls") },
 		filetypes = { "proto" },
 		root_markers = {
 			"buf.yaml",
@@ -414,7 +420,7 @@ return function()
 
 	-- ESLint Language Server
 	vim.lsp.config.eslint = {
-		cmd = { vim.fn.exepath("vscode-eslint-language-server"), "--stdio" },
+		cmd = { exe("vscode-eslint-language-server"), "--stdio" },
 		root_markers = {
 			".eslintrc",
 			".eslintrc.js",
@@ -450,12 +456,37 @@ return function()
 		on_attach = function(client, bufnr)
 			-- Enable ESLint formatting
 			client.server_capabilities.documentFormattingProvider = true
-
-			local opts = { noremap = true, silent = true }
-			vim.keymap.set("n", "<leader>f", function()
-				vim.lsp.buf.format({ async = false })
-			end, opts)
 		end,
+	}
+
+	-- GLSL Language Server (glsl_analyzer)
+	vim.filetype.add({
+		extension = {
+			vert = "glsl",
+			frag = "glsl",
+			comp = "glsl",
+			geom = "glsl",
+			tesc = "glsl",
+			tese = "glsl",
+			glsl = "glsl",
+			rgen = "glsl",
+			rint = "glsl",
+			rahit = "glsl",
+			rchit = "glsl",
+			rmiss = "glsl",
+			rcall = "glsl",
+		},
+	})
+
+	vim.lsp.config.glsl_analyzer = {
+		cmd = { exe("glsl_analyzer") },
+		filetypes = { "glsl", "vert", "tesc", "tese", "geom", "frag", "comp", "rgen", "rint", "rahit", "rchit", "rmiss", "rcall" },
+		root_markers = {
+			".git",
+			"compile_commands.json",
+			"CMakeLists.txt",
+			"Makefile",
+		},
 	}
 
 	-- Custom notification filter for rust-analyzer
@@ -469,4 +500,49 @@ vim.notify = function(msg, log_level, opts)
     end
 end
 --]]
+	-- Servers to manage
+	local servers = {
+		"clangd",
+		"cssls",
+		"emmet_language_server",
+		"html",
+		"jsonls",
+		"lua_ls",
+		"rust_analyzer",
+		"tailwindcss",
+		"ts_ls",
+		"yamlls",
+		"gopls",
+		"bufls",
+		"eslint",
+		"glsl_analyzer",
+	}
+
+	-- Helper to enable a server only if its executable exists
+	local function enable_if_executable(server_name)
+		local cfg = vim.lsp.config[server_name]
+		local cmd = cfg and cfg.cmd and cfg.cmd[1]
+		if cmd and vim.fn.executable(cmd) == 1 then
+			vim.lsp.enable({ server_name })
+			return true
+		end
+		return false
+	end
+
+	-- Only enable servers that are currently installed/executable
+	for _, server in ipairs(servers) do
+		enable_if_executable(server)
+	end
+
+	-- Automatically enable newly installed servers from Mason without restarting Neovim
+	local has_mason_registry, mason_registry = pcall(require, "mason-registry")
+	if has_mason_registry then
+		mason_registry:on("package:install:success", function()
+			vim.schedule(function()
+				for _, server in ipairs(servers) do
+					enable_if_executable(server)
+				end
+			end)
+		end)
+	end
 end
