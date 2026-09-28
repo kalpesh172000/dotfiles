@@ -44,10 +44,14 @@ return {
 						"--glob=!**/dist/*",
 						"--glob=!**/yarn.lock",
 						"--glob=!**/package-lock.json",
+						"--glob=!**/node_modules/*",
 					},
 				},
 			},
 			defaults = {
+				file_ignore_patterns = {
+					"node_modules",
+				},
 				mappings = {
 					n = {
 						["q"] = actions.close, -- Press q in NORMAL mode to close Telescope
@@ -72,6 +76,7 @@ return {
 					"--glob=!**/dist/*",
 					"--glob=!**/yarn.lock",
 					"--glob=!**/package-lock.json",
+					"--glob=!**/node_modules/*",
 				},
 			},
 		})
