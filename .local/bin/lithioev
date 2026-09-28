@@ -1,0 +1,132 @@
+#!/usr/bin/env bash
+
+SESSION="lithioev"
+
+case "$1" in
+  start)
+    echo "🐳 Checking Docker Desktop..."
+
+    # Launch Docker Desktop if not running
+    if ! pgrep -xq "Docker Desktop"; then
+      echo "🚀 Launching Docker Desktop..."
+      open -a "Docker"
+      sleep 3
+    fi
+
+    # Wait until Docker daemon is ready
+    ATTEMPTS=0
+    MAX_ATTEMPTS=30
+    until docker info >/dev/null 2>&1; do
+      ((ATTEMPTS++))
+      if [ $ATTEMPTS -ge $MAX_ATTEMPTS ]; then
+        echo "❌ Docker did not start after waiting ~30 seconds."
+        echo "👉 Please open Docker Desktop manually, wait for it to start, then run: lithioev start"
+        exit 1
+      fi
+      echo "⏳ Waiting for Docker to start... ($ATTEMPTS)"
+      sleep 1
+    done
+    echo "✅ Docker daemon is running!"
+
+    echo "🚀 Starting Docker containers..."
+    for svc in mysql redis minio inngest; do
+      RUNNING=$(docker ps -q -f name=^/${svc}$)
+
+      if [ -n "$RUNNING" ]; then
+        echo "✔️  $svc already running."
+        continue
+      fi
+
+      EXISTING=$(docker ps -aq -f name=^/${svc}$)
+
+      if [ -n "$EXISTING" ]; then
+        echo "🔄 Starting $svc..."
+        docker start "$svc"
+      else
+        echo "⚠️  $svc container not found."
+      fi
+    done
+
+    sleep 3
+
+    echo "💻 Launching tmux workspace '$SESSION'..."
+
+    tmux has-session -t $SESSION 2>/dev/null
+    if [ $? != 0 ]; then
+      echo "Creating new tmux session '$SESSION'..."
+
+      tmux new-session -d -s $SESSION -c ~/projects/lithioev/lithioev/
+      tmux rename-window -t $SESSION:1 'editor'
+      tmux send-keys -t $SESSION:editor 'nvim .' C-m
+
+      tmux new-window -t $SESSION:2 -n 'root' -c ~/projects/lithioev/lithioev/
+      tmux send-keys -t $SESSION:root 'docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"' C-m
+
+      # tmux new-window -t $SESSION:3 -n 'cli' -c ~/projects/lithioev/apps/cli
+      # tmux send-keys -t $SESSION:cli 'clear' C-m
+
+      tmux new-window -t $SESSION:3 -n 'server' -c ~/projects/lithioev/lithioev/
+      tmux send-keys -t $SESSION:server 'yarn install && yarn build && yarn build && yarn workspace @lithioev/api dev' C-m
+
+      # sleep 5
+      #
+      # tmux new-window -t $SESSION:5 -n 'zrokapp' -c ~/projects/lithioev
+      # tmux send-keys -t $SESSION:zrokapp 'zrok share reserved kalpeshlithioevapp' C-m
+      #
+      # sleep 5
+      #
+      # tmux new-window -t $SESSION:6 -n 'zrokapi' -c ~/projects/lithioev
+      # tmux send-keys -t $SESSION:zrokapi 'zrok share reserved kalpeshlithioevapi' C-m
+      #
+      # tmux new-window -t $SESSION:7 -n 'gemini' -c ~/projects/lithioev
+      # tmux send-keys -t $SESSION:gemini 'gemini' C-m
+    fi
+
+    tmux attach -t $SESSION
+    ;;
+
+  stop)
+    echo "🛑 Stopping tmux session..."
+    tmux kill-session -t $SESSION 2>/dev/null
+
+    echo "🛑 Stopping Docker containers..."
+    for svc in mysql redis minio inngest; do
+      docker stop $svc >/dev/null 2>&1 && echo "Stopped $svc"
+    done
+    ;;
+
+  docker)
+    docker ps --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+    ;;
+  generate)
+    FILENAME="$2"
+
+    if [ -z "$FILENAME" ]; then
+      echo "❌ Migration filename is required"
+      echo "👉 Usage: lithioev generate <migration-name>"
+      exit 1
+    fi
+
+    echo "🧬 Generating migration: $FILENAME"
+
+    yarn cli db migrations:generate ../../migrations/"$FILENAME" --js
+    ;;
+  run)
+    yarn cli db migrations:run
+    ;;
+  lint)
+    yarn lint && yarn format
+    ;;
+  format)
+    yarn format && yarn lint
+    ;;
+  init)
+    yarn cli db drop && yarn cli db init
+    ;;
+  seed)
+    yarn cli db seed && yarn cli db seed --initial
+    ;;
+  *)
+    echo "Usage: lithioev {start|stop|docker|generate filename|run}"
+    ;;
+esac
