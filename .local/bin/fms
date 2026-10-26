@@ -69,6 +69,11 @@ case "$1" in
       tmux new-window -t $SESSION:3 -n 'server' -c ~/projects/lithioev/fms
       tmux send-keys -t $SESSION:server 'yarn install && yarn build && yarn build && yarn workspace @yugo/api dev' C-m
 
+      tmux new-window -t $SESSION:4 -n 'backoffice' -c ~/projects/lithioev/fms/
+      tmux send-keys -t $SESSION:backoffice 'yarn workspace @yugo/backoffice dev' C-m
+
+      tmux new-window -t $SESSION:5 -n 'henchmen' -c ~/projects/lithioev/fms/
+      tmux send-keys -t $SESSION:henchmen 'yarn workspace @yugo/henchmen dev' C-m
       # sleep 5
       #
       # tmux new-window -t $SESSION:5 -n 'zrokapp' -c ~/projects/fms
