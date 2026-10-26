@@ -1,119 +1,121 @@
 ---
 name: commit-and-pr
 description: >-
-  Automates the process of committing files (strictly one commit per file), pushing each commit immediately to remote origin, and generating a clean pull request description markdown file in the repository root. Use this skill whenever the user asks to commit changes, push commits, or prepare a PR description following repository standards.
+    Strictly follow repository guidelines for committing files (one commit per file, strict commit message format), pushing immediately to origin via an automated script without asking one by one, and creating PR descriptions with required confirmation and two-part structure.
 ---
 
-# Commit & PR Description Workflow
+## Prerequisites before starting
 
-This skill guides the automated process of committing changes strictly one file at a time, pushing each commit immediately to the remote origin, and writing a standardized pull request description in the repository root.
+1. before making commits make sure user is not or either main or dev. if user hasn't switched to the dedicated branch then stop immidietly and give warning to user. never commit on dev branch. all the following steps should be perfromed on the non dev/main branch. else give warning to user and stop.
+2. Always get working Gitea credentials directly from the system credential helper:
 
----
+    ```bash
+    printf "protocol=https\nhost=git.bopconsultancy.com\n" | git credential fill
+    ```
 
-## 1. Commit Rules & Standards
+## Guide for making commits
 
-### Golden Rules
-1. **One commit per file (Strict Rule)**: Every modified or newly created file must have its own separate commit.
-2. **Combine files only if identical & tiny**: Combine two files into one commit *only* when the changes in both files are virtually identical and extremely small (e.g., matching one-line type renames).
-3. **Push after every commit**: Always push each commit to the remote `origin` immediately before creating the next commit.
-4. **Automated script execution**: Due to the high number of files and commits, generate and run a script (e.g. Node.js or shell script) that cycles through:
-   - Staging the file (`git add <file>`)
-   - Committing with a compliant message (`git commit -m "..."`)
-   - Pushing to the remote (`git push origin <branch>`)
-   All commits and pushes should execute sequentially in one automated run without prompting for manual verification per commit.
+1. one commit per file is a strict rule.
+2. combine two files into one commit only when things changed in both file are very very same and very very small.
+3. for writing commit message user format of "type(package_name): commit message",
+4. commit message which follows 'type(package_name):' should be simple english sentence in present tense and should indecate what will happend after this commit is merged. it should not be too, simple it can around 20 words and this will be the main commit message. if the commit message is not enough to explain all the things which changed inside the file then sub commit message bullet points should be added number of bullet points will depends on whether every logical changes are summarized in the commit or not. it should explain logic of the code change. if some files doesn't belong to any package then put package name as 'workspace'. like .prettierrc, docs, yarn.lock, docs/ etc. And if file belongs to cicd pipeline then make it 'cicd' like .drone.yml , docker-compose.yml, build-and-push.sh, dockerfile, etc.
+5. for package_name, strip the `@lithioev/` or `@yugo/nestjs-` prefixes. for example, use `cqrs` instead of `@revo/cqrs`, and use `database` instead of `@revo/nestjs-database`.
+6. in above type can be fix, feat, refactor, perf, typo, chore, docs
+7. always write a script which cycles through :- adds file, commits the file, and pushes the commit to the remote 'origin'. always push the commit to the origin before making another commit. all commits and pushing to the origin should happen after executing the script only once.
 
----
+- fix: this fixes a bug
+- feat: newly added feature like new endpoint new command code added to the file which works independant to other things in the same file like newly added endpoint works independantly from other endpoints. or newly added constand newly added type.
+- refactor: if it changes existing code logic inside the code, the code which donesn't belong to feat as mentioned above.
+- chore: for anything which was auto generated and not manually changed by user like changed migraiton file or yarn lock.
+- docs: any code which doesn't get executed and is there for information purpose only.
+- typo for spelling mistake.
+- perf; refactoring done for increasing performance of the project.
 
-## 2. Commit Message Structure
+## Guide for writing PR description
 
-### Format
-```text
-type(package_name): commit message in present tense explaining the change logic
+1. immidietly after pushing all the commits to the remote 'origin' take count of the commits and start writing the pr title and pr description for the code changed in the commits.
+2. description should be writen in .md format.
+3. description would have two parts. first # Description and second ## Changes.
+4. also give ### title. this title should be like commit message but it should be for entire pr means it will contain tag of fix,feat, etc. it would also contain package name but choose package from apps/ directory whoever the code affects the most.
+5. description part of pr should describe what this pr does in less technical way.
+6. changes should make a bullets point list of logically changes done. these bullet points are not related to commit messages but its simpe english sentense including logical explaination of the code changed in the included commits. so check the code changed and not commit message.
+7. thus you can ignore the change in files like index.ts which is just exporting things in newly created file.
+8. the goal is to note down logical changes to the code in simple readable english
+9. these shouldn't include any commit hash or commit message.
 
-- Optional bullet point explaining additional logical details if needed
-- Another bullet point if multiple aspects changed in this file
-```
+## Guide to making pr
 
-### Package Name Guidelines
-- **Strip prefixes**: Strip monorepo scope prefixes such as `@lithioev/`, `@yugo/nestjs-`, `@yugo/`, or `@revo/`.
-  - Example: `@yugo/nestjs-cqrs` $\rightarrow$ `cqrs`
-  - Example: `@yugo/nestjs-database` $\rightarrow$ `database`
-  - Example: `@yugo/shared` $\rightarrow$ `shared`
-  - Example: `apps/api` $\rightarrow$ `api`
-  - Example: `apps/henchmen` $\rightarrow$ `henchmen`
-- **CI/CD files**: Use `cicd` for CI/CD and deployment files:
-  - `.drone.yml`, `docker-compose.yml`, `Dockerfile`, `build-and-push.sh`, etc.
-- **Root/Workspace files**: Use `workspace` for general repository files that do not belong to a specific package:
-  - `.prettierrc`, `yarn.lock`, migrations (`migrations/*`), root `package.json`, root `docs/`, etc.
+Follow this exact 3-step automated flow using `curl` or Python standard library `urllib.request` (do not import third-party packages like `requests`):
 
-### Message Content Guidelines
-- **Tense**: Simple English sentence in present tense (e.g., `feat(api): add...`, `fix(cqrs): prevent...`).
-- **Outcome-focused**: Describe what happens after this commit is merged.
-- **Depth**: Not overly simple — target approximately 20 words for the main sentence to explain the code change logic.
-- **Sub-bullet points**: If a single sentence cannot cover all changes in the file, add bullet points below the main message to summarize each logical change.
+### 1. Get Credentials and Find the Issue
 
-### Commit Types
-- `feat`: Newly added feature, endpoint, command, entity, constant, or type that operates independently.
-- `fix`: Bug fix that corrects faulty logic or restores intended behavior.
-- `refactor`: Changes to existing code logic that neither fix a bug nor introduce a brand-new feature.
-- `perf`: Code refactoring done specifically to improve performance.
-- `chore`: Auto-generated or operational changes (e.g., generated migration files, lockfile updates, dependency bumps).
-- `docs`: Non-executing documentation or comment changes.
-- `typo`: Correction of spelling errors in code, comments, or documentation.
+1. Get working Gitea credentials directly from the system keychain:
 
----
+    ```bash
+    printf "protocol=https\nhost=git.bopconsultancy.com\n" | git credential fill
+    ```
 
-## 3. Sequential Commit & Push Automation
+2. Search for issues by keyword related to your branch or feature (for example `AMC`, `wallet`, `kyc`). **Always include `type=issues`** so merged PRs are not returned:
 
-When executing commits across multiple files:
+    ```bash
+    curl -s -u "$USER:$PASS" "https://git.bopconsultancy.com/api/v1/repos/{upstream_owner}/{repo}/issues?type=issues&state=all&q=<keyword>&limit=10"
+    ```
 
-1. **Verify changed files**: Inspect `git status --porcelain` to identify all modified and untracked files.
-2. **Order logically**: Sort files by dependency order:
-   - Shared enums, types, and constants (`packages/shared/*`)
-   - Database entities and migrations (`packages/nestjs/database/*`, `migrations/*`)
-   - CQRS queries, commands, and handlers (`packages/nestjs/cqrs/*`)
-   - Application controllers, modules, and DTOs (`apps/api/*`, `apps/henchmen/*`)
-   - Config, CI/CD, and workspace files (`docker-compose.yml`, etc.)
-3. **Generate runner script**: Create a runner script in the scratch directory (e.g. `scratch/execute-commits.mjs`) containing the ordered file list and commit messages.
-4. **Execute**: Run the script to stage, commit, and push each file one by one:
-   ```javascript
-   for (const item of commitPlan) {
-     execSync(`git add "${item.file}"`, { stdio: 'inherit' });
-     execSync(`git commit -m "${item.msg}"`, { stdio: 'inherit' });
-     execSync(`git push origin ${currentBranch}`, { stdio: 'inherit' });
-   }
-   ```
-5. **Verify**: Ensure `git status` reports a clean working tree after execution.
+3. Read the issue title to get the exact business name and acronyms (never guess acronyms like AMC).
+4. If a relevant issue is found, add this to the bottom of the PR description:
 
----
+    ```markdown
+    ## Closes
 
-## 4. PR Description Guidelines
+    #issueNumber
+    ```
 
-Immediately after pushing all commits:
+### 2. Create the Pull Request
 
-1. **File Location**: Write the PR description to an `.md` file in the repository root (e.g. `pr-description.md`).
-2. **Never commit the description file**: Add the file to `.git/info/exclude` or verify it is not staged or tracked.
-3. **Structure**: The markdown file must strictly contain:
+Create the PR on the upstream repository using `POST /api/v1/repos/{upstream_owner}/{repo}/pulls`:
 
-   ```markdown
-   ### title
-   type(package_name): concise PR summary title
+- **URL**: `https://git.bopconsultancy.com/api/v1/repos/{upstream_owner}/{repo}/pulls`
+- **Method**: `POST`
+- **Payload**:
 
-   # description
-   High-level explanation of what this PR does in accessible, less technical language.
+    ```json
+    {
+        "base": "dev",
+        "head": "<your_username>:<branch_name>",
+        "title": "<PR Title>",
+        "body": "<PR Description in Markdown>",
+        "assignees": ["kalpeshp"]
+    }
+    ```
 
-   ## Changes
-   - Bullet point describing logical change 1 in clear, simple English
-   - Bullet point describing logical change 2
-   - Bullet point describing logical change 3
-   ```
+### 3. Request Review and Add Label
 
-4. **PR Title (`### title`)**:
-   - Follows the commit format: `type(package_name): description`.
-   - For `package_name`, select the application from `apps/` that is most affected by the PR (e.g., `api`, `backoffice`, `app`).
-5. **PR Description (`# description`)**:
-   - Describe the purpose and functionality of the PR in a clear, non-technical or semi-technical manner suitable for all stakeholders.
-6. **Logical Changes (`## Changes`)**:
-   - Create a bulleted list of logical changes based on the actual code diffs, not merely restating commit messages.
-   - Ignore purely administrative changes (e.g., re-exporting in `index.ts`).
-   - Do NOT include commit hashes or raw commit messages.
+Right after the PR is created, use the returned PR number:
+
+1. **Request Review**:
+   Send a `POST` request to `https://git.bopconsultancy.com/api/v1/repos/{upstream_owner}/{repo}/pulls/{pr_number}/requested_reviewers`
+
+    ```json
+    {
+        "reviewers": ["akashc"]
+    }
+    ```
+
+2. **Add Label**:
+   Send a `POST` request to `https://git.bopconsultancy.com/api/v1/repos/{upstream_owner}/{repo}/issues/{pr_number}/labels`
+
+    ```json
+    {
+        "labels": [1703]
+    }
+    ```
+
+    _(Use `1703` for enhancement or `1701` for bug)_
+
+### 4. Check if pr is out of date with the upstream/dev
+
+1. if pr is out of date from the upstream/dev then do git fetch upstream dev && git merge upstream/dev and push this to origin.
+
+## Guide for cleaning up
+
+1. after everything has been dones delete all the scripts and files which were generated for aiding this skill. for e.g script written and executed to execute add commit put cycle.
